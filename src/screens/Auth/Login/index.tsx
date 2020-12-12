@@ -1,10 +1,9 @@
 import React from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
 import {View, Text, Colors, TextField, Button} from 'react-native-ui-lib';
-import Buttons from '../../../components/Button';
 import color from '../../../components/Color';
 
-const Login = () => {
+const LoginScreen = ({navigation}: any) => {
   return (
     <>
       <ScrollView>
@@ -66,4 +65,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginScreen;

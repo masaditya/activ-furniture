@@ -2,7 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {LOGIN_SCREEN} from './routename';
-import Login from '../screens/Auth/Login';
+import LoginScreen from '../screens/Auth/Login';
 
 const Stack = createStackNavigator();
 
@@ -12,10 +12,9 @@ const AuthNavigation = () => {
       <Stack.Navigator initialRouteName={LOGIN_SCREEN}>
         <Stack.Screen
           name={LOGIN_SCREEN}
-          component={Login}
+          component={LoginScreen}
           options={{headerShown: false}}
         />
-        {/* <Stack.Screen name={DETAIL_PRODUCT_SCREEN} component={DetailsScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
