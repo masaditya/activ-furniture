@@ -1,11 +1,13 @@
 import React from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
-import {View, Text, Colors, TextField, Button} from 'react-native-ui-lib';
+import {View, Text, Colors, Button} from 'react-native-ui-lib';
 import color from '../../../components/Color';
+import {HOME_SCREEN} from '../../../navigation/routename';
+import {Input} from '@ui-kitten/components';
 
 const LoginScreen = ({navigation}: any) => {
   return (
-    <>
+    <View flex-1 backgroundColor={Colors.white}>
       <ScrollView>
         <View backgroundColor={Colors.white} paddingT-40 paddingH-20>
           <Text font34bold>Welcome to</Text>
@@ -37,19 +39,22 @@ const LoginScreen = ({navigation}: any) => {
         <View backgroundColor={Colors.white} padding-30 marginT-10>
           <Text font16bold>Or Sign in with your account</Text>
           <View paddingV-20>
-            <TextField
-              title="Email or Phone Number"
-              titleColor={color.primary}
-              underlineColor={color.primary}
-              floatOnFocus
-            />
-            <TextField
-              title="Password"
-              secureTextEntry={true}
-              titleColor={color.primary}
-              underlineColor={color.primary}
-              floatOnFocus
-            />
+            <View paddingB-20>
+              <Input
+                label="Email or Phone Number"
+                status="basic"
+                focusable
+                // onChangeText={(nextValue) => setValue(nextValue)}
+              />
+            </View>
+            <View paddingB-20>
+              <Input
+                label="Password"
+                secureTextEntry
+                status="basic"
+                // onChangeText={(nextValue) => setValue(nextValue)}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -57,11 +62,15 @@ const LoginScreen = ({navigation}: any) => {
         <Button backgroundColor={Colors.white} flex-1 fullWidth>
           <Text color={color.primary}>Signup</Text>
         </Button>
-        <Button backgroundColor={color.primary} flex-1 fullWidth>
+        <Button
+          onPress={() => navigation.navigate(HOME_SCREEN)}
+          backgroundColor={color.primary}
+          flex-1
+          fullWidth>
           <Text color={Colors.white}>Signin</Text>
         </Button>
       </View>
-    </>
+    </View>
   );
 };
 

@@ -1,67 +1,111 @@
-import React from 'react';
-import {ImageBackground, TouchableOpacity} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
-import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
-import {View, Text, Colors} from 'react-native-ui-lib';
-import {DETAIL_PRODUCT_SCREEN} from '../../navigation/routename';
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {Dimensions, FlatList} from 'react-native';
+import {ScrollView, TouchableHighlight} from 'react-native-gesture-handler';
+import {RFValue} from 'react-native-responsive-fontsize';
+import {
+  View,
+  Text,
+  Colors,
+  Modal,
+  Slider,
+  ChipsInput,
+} from 'react-native-ui-lib';
+import Icon from 'react-native-vector-icons/Ionicons';
+import color from '../../components/Color';
+import ProductItem from '../../components/ProductItem';
+import {productList} from '../../mock/data';
+import RightDrawer from './RightDrawer';
 
-const ProductListScreen = ({navigation}: any) => {
-  return (
-    <View paddingH-20>
-      <ScrollView>
-        <View row>
-          <View padding-10 width="50%" style={{borderRadius: RFValue(20)}}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate(DETAIL_PRODUCT_SCREEN)}>
-              <ImageBackground
-                source={{
-                  uri:
-                    'https://www.barkerandstonehouse.co.uk/images/uploaded/zoom/9STF3STRZINC_1_Zoom.jpg',
-                }}
-                style={{
-                  width: RFPercentage(20),
-                  height: RFValue(100),
-                  borderRadius: RFValue(20),
-                  justifyContent: 'center',
-                }}></ImageBackground>
-              <Text style={{padding: RFValue(5)}} font16bold>
-                Dinner table
-              </Text>
-              <Text
-                style={{paddingHorizontal: RFValue(5)}}
-                font10
-                color={Colors.grey40}>
-                $ 120.000
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View padding-10 width="50%" style={{borderRadius: RFValue(20)}}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate(DETAIL_PRODUCT_SCREEN)}>
-              <ImageBackground
-                source={{
-                  uri:
-                    'https://images.unsplash.com/photo-1544207240-4193795530ee?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=914&q=80',
-                }}
-                style={{
-                  width: RFPercentage(20),
-                  height: RFValue(100),
-                  borderRadius: RFValue(20),
-                  justifyContent: 'center',
-                }}></ImageBackground>
-              <Text style={{padding: RFValue(5)}} font16bold>
-                Dinner table
-              </Text>
-              <Text
-                style={{paddingHorizontal: RFValue(5)}}
-                font10
-                color={Colors.grey40}>
-                $ 120.000
-              </Text>
-            </TouchableOpacity>
-          </View>
+const ProductListScreen = () => {
+  const navigation = useNavigation();
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [priceFilter, setPriceFilter] = useState<{min: number; max: number}>({
+    min: 100,
+    max: 200,
+  });
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View paddingH-10>
+          <Text font14bold onPress={() => setModalVisible(true)}>
+            Filter
+          </Text>
         </View>
-      </ScrollView>
+      ),
+    });
+  }, []);
+
+  return (
+    <View flex-1 backgroundColor={Colors.white}>
+      <RightDrawer
+        priceFilter={priceFilter}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        setPriceFilter={setPriceFilter}
+      />
+      <FlatList
+        ListHeaderComponent={
+          <View
+            paddingT-10
+            style={{borderBottomWidth: 1, borderBottomColor: Colors.grey50}}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View paddingH-20 paddingV-10>
+                <Text
+                  onPress={() => setModalVisible(true)}
+                  color={
+                    selectedCategory === 'All' ? color.primary : Colors.grey40
+                  }
+                  font16bold>
+                  All
+                </Text>
+              </View>
+              <View paddingH-20 paddingV-10>
+                <Text
+                  onPress={() => setSelectedCategory('L Shaped')}
+                  color={
+                    selectedCategory === 'L Shaped'
+                      ? color.primary
+                      : Colors.grey40
+                  }
+                  font16bold>
+                  L Shaped
+                </Text>
+              </View>
+              <View paddingH-20 paddingV-10>
+                <Text
+                  onPress={() => setSelectedCategory('Recliner')}
+                  color={
+                    selectedCategory === 'Recliner'
+                      ? color.primary
+                      : Colors.grey40
+                  }
+                  font16bold>
+                  Recliner
+                </Text>
+              </View>
+              <View paddingH-20 paddingV-10>
+                <Text
+                  onPress={() => setSelectedCategory('Sofa Cum Bed')}
+                  color={
+                    selectedCategory === 'Sofa Cum Bed'
+                      ? color.primary
+                      : Colors.grey40
+                  }
+                  font16bold>
+                  Sofa Cum Bed
+                </Text>
+              </View>
+            </ScrollView>
+          </View>
+        }
+        data={productList}
+        renderItem={(item) => <ProductItem {...item.item} />}
+        numColumns={2}
+        keyExtractor={(item, index) => index.toString()}
+      />
     </View>
   );
 };

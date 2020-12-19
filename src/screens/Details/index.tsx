@@ -1,17 +1,27 @@
+import {useNavigation} from '@react-navigation/native';
 import {Button, Tab, TabView} from '@ui-kitten/components';
 import React from 'react';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {View, Text, Colors, Button as UIBtn} from 'react-native-ui-lib';
 import {Image} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../components/Color';
+import ProductItem from '../../components/ProductItem';
+import {productList} from '../../mock/data';
 import DescriptionInfo from './DescriptionInfo';
 
 export default function DetailsScreen({navigation}: any) {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const tmp = [1, 2, 3, 4];
+
   return (
-    <ScrollView>
+    <ScrollView nestedScrollEnabled={true}>
       <Image
         style={{width: RFPercentage(100), height: RFValue(200)}}
         source={{
@@ -23,26 +33,10 @@ export default function DetailsScreen({navigation}: any) {
         <Text style={{paddingVertical: RFValue(5)}} font16bold>
           Anne Solid Wood Queen Size
         </Text>
-        <Text font16 color={color.primary}>
-          $ 120.000
-        </Text>
         <View row spread centerV paddingT-10>
           <Text font10 color={Colors.grey40}>
             Sofas // L Shaped Sofas
           </Text>
-          <View row centerV>
-            <Text font10bold>4.5</Text>
-            <View row paddingH-5>
-              <Icon name="star" color={Colors.yellow10} />
-              <Icon name="star" color={Colors.yellow10} />
-              <Icon name="star" color={Colors.yellow10} />
-              <Icon name="star" color={Colors.yellow10} />
-              <Icon name="star" color={Colors.grey50} />
-            </View>
-            <Text font10bold color={Colors.grey40}>
-              (125)
-            </Text>
-          </View>
         </View>
       </View>
       <TabView
@@ -58,7 +52,6 @@ export default function DetailsScreen({navigation}: any) {
               earum similique, nihil commodi alias ipsa iure necessitatibus
               aperiam distinctio aliquid, facere eaque.
             </Text>
-
             <View row paddingV-10>
               <TouchableOpacity
                 style={{
@@ -103,15 +96,14 @@ export default function DetailsScreen({navigation}: any) {
             </View>
           </View>
         </Tab>
-        <Tab title={() => <Text color={color.primary}>Review</Text>}>
-          <View>
-            <Text>ORDERS</Text>
-          </View>
-        </Tab>
-        <Tab title={() => <Text color={color.primary}>Similar</Text>}>
-          <View>
-            <Text>TRANSACTIONS</Text>
-          </View>
+        <Tab
+          style={{backgroundColor: Colors.white, flex: 1}}
+          title={() => <Text color={color.primary}>Similar</Text>}>
+          <FlatList
+            data={productList.slice(0, 4)}
+            renderItem={(item) => <ProductItem {...item.item} />}
+            numColumns={2}
+            keyExtractor={(item, index) => index.toString()}></FlatList>
         </Tab>
       </TabView>
       <View flex-2 row spread style={{position: 'absolute', bottom: 0}}>
