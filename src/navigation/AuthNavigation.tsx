@@ -8,9 +8,15 @@ const Stack = createStackNavigator();
 
 const AuthNavigation = () => {
   return (
-    <NavigationContainer>
-      
-    </NavigationContainer>
+    <Stack.Navigator>
+      <Stack.Screen
+        options={{
+          headerTransparent: true,
+        }}
+        name={LOGIN_SCREEN}
+        component={LoginScreen}
+      />
+    </Stack.Navigator>
   );
 };
 

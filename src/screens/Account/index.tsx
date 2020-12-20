@@ -13,6 +13,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import color from '../../components/Color';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {LOGIN_SCREEN} from '../../navigation/routename';
 
 const AccountScreen = ({navigation}: any) => {
   return (
@@ -133,6 +134,15 @@ const AccountScreen = ({navigation}: any) => {
             </View>
           </View>
         </RadioGroup>
+        <Button
+          onPress={() => navigation.navigate(LOGIN_SCREEN)}
+          margin-20
+          fullWidth
+          backgroundColor={Colors.red10}>
+          <Text font14 white>
+            Logout
+          </Text>
+        </Button>
       </ScrollView>
     </View>
   );

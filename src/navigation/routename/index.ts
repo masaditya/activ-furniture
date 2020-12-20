@@ -4,8 +4,12 @@ export const PRODUCT_LIST_SCREEN="PRODUCT_LIST_SCREEN"
 export const ACCOUNT_SCREEN="ACCOUNT_SCREEN"
 
 
+export const AUTH_NAV="AUTH_NAV"
+export const MAIN_NAV="MAIN_NAV"
 
 
 // AUTH
 export const LOGIN_SCREEN="LOGIN_SCREEN"
+export const REGISTER_SCREEN="REGISTER_SCREEN"
+
 

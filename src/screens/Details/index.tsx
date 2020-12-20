@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
-import {Button, Tab, TabView} from '@ui-kitten/components';
-import React from 'react';
+import {Button, Tab, TabView, ViewPager} from '@ui-kitten/components';
+import React, {useEffect} from 'react';
 import {
   FlatList,
   ScrollView,
@@ -16,19 +16,37 @@ import ProductItem from '../../components/ProductItem';
 import {productList} from '../../mock/data';
 import DescriptionInfo from './DescriptionInfo';
 
-export default function DetailsScreen({navigation}: any) {
+export default function DetailsScreen() {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const navigation = useNavigation();
   const tmp = [1, 2, 3, 4];
 
   return (
-    <ScrollView nestedScrollEnabled={true}>
-      <Image
-        style={{width: RFPercentage(100), height: RFValue(200)}}
-        source={{
-          uri:
-            'https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-        }}
-      />
+    <View flex-1 backgroundColor={Colors.white}>
+      <ViewPager>
+        <Image
+          style={{width: RFPercentage(100), height: RFValue(200)}}
+          source={{
+            uri:
+              'https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+          }}
+        />
+        <Image
+          style={{width: RFPercentage(100), height: RFValue(200)}}
+          source={{
+            uri:
+              'https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+          }}
+        />
+        <Image
+          style={{width: RFPercentage(100), height: RFValue(200)}}
+          source={{
+            uri:
+              'https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+          }}
+        />
+      </ViewPager>
+
       <View backgroundColor={Colors.white} padding-15>
         <Text style={{paddingVertical: RFValue(5)}} font16bold>
           Anne Solid Wood Queen Size
@@ -45,55 +63,64 @@ export default function DetailsScreen({navigation}: any) {
         selectedIndex={selectedIndex}
         onSelect={(index) => setSelectedIndex(index)}>
         <Tab title={() => <Text color={color.primary}>Description</Text>}>
-          <View backgroundColor={Colors.white} padding-20 paddingB-40>
-            <Text>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Reiciendis repellat deserunt velit quia saepe. Velit dolor, sed
-              earum similique, nihil commodi alias ipsa iure necessitatibus
-              aperiam distinctio aliquid, facere eaque.
-            </Text>
-            <View row paddingV-10>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: Colors.grey40,
-                  padding: 10,
-                  marginHorizontal: 5,
-                }}
-              />
-              <TouchableOpacity
-                style={{
-                  backgroundColor: Colors.orange10,
-                  padding: 10,
-                  marginHorizontal: 5,
-                }}
-              />
-              <TouchableOpacity
-                style={{
-                  backgroundColor: Colors.green10,
-                  padding: 10,
-                  marginHorizontal: 5,
-                }}
-              />
-              <TouchableOpacity
-                style={{
-                  backgroundColor: Colors.yellow10,
-                  padding: 10,
-                  marginHorizontal: 5,
-                }}
-              />
-            </View>
-            <View paddingV-20>
-              <DescriptionInfo field="Brand" value="Furniwood" />
-              <DescriptionInfo
-                field="Dimension (in)"
-                value="H 22 x W 47 x D 16"
-              />
-              <DescriptionInfo field="Colour" value="Honey Oak" />
-              <DescriptionInfo field="Room Type" value="Bedroom" />
-              <DescriptionInfo field="Collection" value="Vayaka" />
-              <DescriptionInfo field="Seating Height" value="13" />
-              <DescriptionInfo field="Primary Material" value="Sheesham Wood" />
-            </View>
+          <View flex-1 backgroundColor={Colors.white} padding-20 paddingB-40>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Text>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Reiciendis repellat deserunt velit quia saepe. Velit dolor, sed
+                earum similique, nihil commodi alias ipsa iure necessitatibus
+                aperiam distinctio aliquid, facere eaque. Lorem ipsum dolor sit
+                amet consectetur adipisicing elit. Atque, molestias voluptates
+                quae ad doloremque perferendis impedit labore inventore,
+                necessitatibus neque, veniam eligendi ipsum minima possimus nemo
+                architecto voluptatum modi consequuntur.
+              </Text>
+              <View row paddingV-10>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: Colors.grey40,
+                    padding: 10,
+                    marginHorizontal: 5,
+                  }}
+                />
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: Colors.orange10,
+                    padding: 10,
+                    marginHorizontal: 5,
+                  }}
+                />
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: Colors.green10,
+                    padding: 10,
+                    marginHorizontal: 5,
+                  }}
+                />
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: Colors.yellow10,
+                    padding: 10,
+                    marginHorizontal: 5,
+                  }}
+                />
+              </View>
+              <View paddingV-20>
+                <DescriptionInfo field="Brand" value="Furniwood" />
+                <DescriptionInfo
+                  field="Dimension (in)"
+                  value="H 22 x W 47 x D 16"
+                />
+                <DescriptionInfo field="Colour" value="Honey Oak" />
+                <DescriptionInfo field="Room Type" value="Bedroom" />
+                <DescriptionInfo field="Collection" value="Vayaka" />
+                <DescriptionInfo field="Seating Height" value="13" />
+                <DescriptionInfo
+                  field="Primary Material"
+                  value="Sheesham Wood"
+                />
+              </View>
+            </ScrollView>
           </View>
         </Tab>
         <Tab
@@ -108,9 +135,11 @@ export default function DetailsScreen({navigation}: any) {
       </TabView>
       <View flex-2 row spread style={{position: 'absolute', bottom: 0}}>
         <UIBtn backgroundColor={color.primary} flex-1 fullWidth>
-          <Text color={Colors.white}>Add To Cart</Text>
+          <Text font16 color={Colors.white}>
+            Add To Cart
+          </Text>
         </UIBtn>
       </View>
-    </ScrollView>
+    </View>
   );
 }

@@ -14,7 +14,7 @@ const ProductItem = (props: {image: string; name: string; price?: string}) => {
       style={{aspectRatio: 1, flex: 1 / 2}}>
       <TouchableOpacity
         onPress={() => {
-          navigate(DETAIL_PRODUCT_SCREEN);
+          navigate('Product', {screen: DETAIL_PRODUCT_SCREEN});
         }}>
         <ImageBackground
           source={{

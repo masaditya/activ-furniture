@@ -9,6 +9,7 @@ import {
   PRODUCT_LIST_SCREEN,
   LOGIN_SCREEN,
   ACCOUNT_SCREEN,
+  REGISTER_SCREEN,
 } from './routename';
 import DetailsScreen from '../screens/Details';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -18,6 +19,8 @@ import LoginScreen from '../screens/Auth/Login';
 import {Colors} from 'react-native-ui-lib';
 import {HeaderBackButton} from '@react-navigation/stack';
 import AccountScreen from '../screens/Account';
+import RegisterScreen from '../screens/Auth/Register';
+import ProductNavigation from './ProductNavigation';
 
 const Drawer = createDrawerNavigator();
 
@@ -36,11 +39,24 @@ export default function MainNavigation(props: any) {
 
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName={ACCOUNT_SCREEN}>
+      <Drawer.Navigator initialRouteName={LOGIN_SCREEN}>
         <Drawer.Screen
           name={LOGIN_SCREEN}
           component={LoginScreen}
           options={{headerShown: false, gestureEnabled: false}}
+        />
+        <Drawer.Screen
+          name={REGISTER_SCREEN}
+          component={RegisterScreen}
+          options={({navigation}) => ({
+            ...mainHeaderOptions,
+            gestureEnabled: false,
+            headerTitle: '',
+            headerRight: () => null,
+            headerLeft: (props) => (
+              <HeaderBackButton onPress={() => navigation.goBack()} />
+            ),
+          })}
         />
         <Drawer.Screen
           options={mainHeaderOptions}
@@ -48,17 +64,21 @@ export default function MainNavigation(props: any) {
           component={HomeScreen}
         />
         <Drawer.Screen
-          options={{
-            title: 'My home',
-            headerStyle: {backgroundColor: 'white', opacity: 0.5},
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
+          options={({navigation}) => ({
+            headerShown: true,
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
             },
-          }}
+            headerLeft: () => (
+              <HeaderBackButton onPress={() => navigation.goBack()} />
+            ),
+            headerTitle: '',
+          })}
           name={DETAIL_PRODUCT_SCREEN}
           component={DetailsScreen}
         />
+        <Drawer.Screen name="Product" component={ProductNavigation} />
         <Drawer.Screen
           options={({navigation}) => ({
             ...mainHeaderOptions,

@@ -2,7 +2,7 @@ import React from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
 import {View, Text, Colors, Button} from 'react-native-ui-lib';
 import color from '../../../components/Color';
-import {HOME_SCREEN} from '../../../navigation/routename';
+import {HOME_SCREEN, REGISTER_SCREEN} from '../../../navigation/routename';
 import {Input} from '@ui-kitten/components';
 
 const LoginScreen = ({navigation}: any) => {
@@ -59,7 +59,11 @@ const LoginScreen = ({navigation}: any) => {
         </View>
       </ScrollView>
       <View flex-2 row spread style={{position: 'absolute', bottom: 0}}>
-        <Button backgroundColor={Colors.white} flex-1 fullWidth>
+        <Button
+          backgroundColor={Colors.white}
+          flex-1
+          fullWidth
+          onPress={() => navigation.navigate(REGISTER_SCREEN)}>
           <Text color={color.primary}>Signup</Text>
         </Button>
         <Button
