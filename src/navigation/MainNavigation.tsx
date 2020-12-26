@@ -10,6 +10,8 @@ import {
   LOGIN_SCREEN,
   ACCOUNT_SCREEN,
   REGISTER_SCREEN,
+  BLOG_SCREEN,
+  READ_BLOG_SCREEN,
 } from './routename';
 import DetailsScreen from '../screens/Details';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -21,6 +23,9 @@ import {HeaderBackButton} from '@react-navigation/stack';
 import AccountScreen from '../screens/Account';
 import RegisterScreen from '../screens/Auth/Register';
 import ProductNavigation from './ProductNavigation';
+import BlogScreen from '../screens/Blog';
+import ReadBlogScreen from '../screens/ReadBlog';
+import CustomDrawerContent from '../components/DrawerContent/index';
 
 const Drawer = createDrawerNavigator();
 
@@ -39,7 +44,9 @@ export default function MainNavigation(props: any) {
 
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName={LOGIN_SCREEN}>
+      <Drawer.Navigator
+        drawerContent={CustomDrawerContent}
+        initialRouteName={LOGIN_SCREEN}>
         <Drawer.Screen
           name={LOGIN_SCREEN}
           component={LoginScreen}
@@ -98,6 +105,15 @@ export default function MainNavigation(props: any) {
           }}
           name={ACCOUNT_SCREEN}
           component={AccountScreen}
+        />
+        <Drawer.Screen
+          options={{
+            ...mainHeaderOptions,
+            headerTitle: 'News',
+            headerRight: () => null,
+          }}
+          name={BLOG_SCREEN}
+          component={BlogScreen}
         />
       </Drawer.Navigator>
     </NavigationContainer>

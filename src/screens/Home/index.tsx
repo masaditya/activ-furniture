@@ -62,7 +62,10 @@ export default function HomeScreen({navigation}: any) {
               />
               <View row paddingT-10 spread centerV>
                 <Text font14>Brand</Text>
-                <Text font12 color={color.primary}>
+                <Text
+                  onPress={() => navigation.navigate(PRODUCT_LIST_SCREEN)}
+                  font12
+                  color={color.primary}>
                   View All
                 </Text>
               </View>
@@ -94,7 +97,10 @@ export default function HomeScreen({navigation}: any) {
               </ScrollView>
               <View row paddingT-10 spread centerV>
                 <Text font14>Categories</Text>
-                <Text font12 color={color.primary}>
+                <Text
+                  onPress={() => navigation.navigate(PRODUCT_LIST_SCREEN)}
+                  font12
+                  color={color.primary}>
                   View All
                 </Text>
               </View>
@@ -133,7 +139,10 @@ export default function HomeScreen({navigation}: any) {
 
               <View row paddingT-10 spread centerV>
                 <Text font14>Best Seller</Text>
-                <Text font12 color={color.primary}>
+                <Text
+                  onPress={() => navigation.navigate(PRODUCT_LIST_SCREEN)}
+                  font12
+                  color={color.primary}>
                   View All
                 </Text>
               </View>

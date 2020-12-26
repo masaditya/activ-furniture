@@ -12,37 +12,16 @@ const LoginScreen = ({navigation}: any) => {
         <View backgroundColor={Colors.white} paddingT-40 paddingH-20>
           <Text font34bold>Welcome to</Text>
           <Text font34bold>
-            Furni <Text color={color.primary}>World</Text>
+            <Text color={color.primary}>Wahana</Text> Furniture
           </Text>
-          <View marginT-40>
-            <Text color={Colors.grey40}>Continue with social account</Text>
-            <View flex-2 row paddingV-20>
-              <Button
-                marginH-10
-                outlineColor={color.primary}
-                backgroundColor={Colors.white}
-                flex-1
-                fullWidth>
-                <Text color={Colors.black}>Facebook</Text>
-              </Button>
-              <Button
-                marginH-10
-                outlineColor={color.primary}
-                backgroundColor={Colors.white}
-                flex-1
-                fullWidth>
-                <Text color={Colors.black}>Google</Text>
-              </Button>
-            </View>
-          </View>
         </View>
         <View backgroundColor={Colors.white} padding-30 marginT-10>
-          <Text font16bold>Or Sign in with your account</Text>
+          <Text font16bold>Sign in with your account</Text>
           <View paddingV-20>
             <View paddingB-20>
               <Input
                 label="Email or Phone Number"
-                status="basic"
+                status="success"
                 focusable
                 // onChangeText={(nextValue) => setValue(nextValue)}
               />
@@ -51,27 +30,22 @@ const LoginScreen = ({navigation}: any) => {
               <Input
                 label="Password"
                 secureTextEntry
-                status="basic"
+                status="success"
                 // onChangeText={(nextValue) => setValue(nextValue)}
               />
             </View>
           </View>
         </View>
       </ScrollView>
-      <View flex-2 row spread style={{position: 'absolute', bottom: 0}}>
-        <Button
-          backgroundColor={Colors.white}
-          flex-1
-          fullWidth
-          onPress={() => navigation.navigate(REGISTER_SCREEN)}>
-          <Text color={color.primary}>Signup</Text>
-        </Button>
+      <View flex-1 row spread style={{position: 'absolute', bottom: 0}}>
         <Button
           onPress={() => navigation.navigate(HOME_SCREEN)}
           backgroundColor={color.primary}
           flex-1
           fullWidth>
-          <Text color={Colors.white}>Signin</Text>
+          <Text font16 color={Colors.white}>
+            Signin
+          </Text>
         </Button>
       </View>
     </View>

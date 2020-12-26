@@ -37,16 +37,23 @@ const AccountScreen = ({navigation}: any) => {
                 width: RFPercentage(30),
               }}
               label="Enter Full Name"
+              value="Albus Dumbledore"
             />
           </View>
           <View paddingT-20>
-            <Input label="Email Address" status="basic" focusable />
+            <Input
+              label="Email Address"
+              status="basic"
+              focusable
+              value="admin@wahana.com"
+            />
           </View>
           <View paddingT-20>
             <Input
               keyboardType="number-pad"
               label="Phone Number"
               status="basic"
+              value="+62 85236846025"
             />
           </View>
           <Button marginT-30 fullWidth backgroundColor={color.primary}>

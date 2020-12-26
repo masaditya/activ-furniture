@@ -4,7 +4,8 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import {Colors} from 'react-native-ui-lib';
 import DetailsScreen from '../screens/Details';
-import {DETAIL_PRODUCT_SCREEN} from './routename';
+import ReadBlogScreen from '../screens/ReadBlog';
+import {DETAIL_PRODUCT_SCREEN, READ_BLOG_SCREEN} from './routename';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,26 @@ const ProductNavigation = () => {
         })}
         name={DETAIL_PRODUCT_SCREEN}
         component={DetailsScreen}
+      />
+      <Stack.Screen
+        options={({navigation}) => ({
+          headerShown: true,
+
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          headerLeft: () => (
+            <HeaderBackButton
+              tintColor={Colors.white}
+              onPress={() => navigation.goBack()}
+            />
+          ),
+          headerTitle: '',
+          headerTransparent: true,
+        })}
+        name={READ_BLOG_SCREEN}
+        component={ReadBlogScreen}
       />
     </Stack.Navigator>
   );

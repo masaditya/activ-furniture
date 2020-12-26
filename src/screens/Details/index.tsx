@@ -63,7 +63,7 @@ export default function DetailsScreen() {
         selectedIndex={selectedIndex}
         onSelect={(index) => setSelectedIndex(index)}>
         <Tab title={() => <Text color={color.primary}>Description</Text>}>
-          <View flex-1 backgroundColor={Colors.white} padding-20 paddingB-40>
+          <View flex-1 backgroundColor={Colors.white} padding-20>
             <ScrollView showsVerticalScrollIndicator={false}>
               <Text>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -133,13 +133,6 @@ export default function DetailsScreen() {
             keyExtractor={(item, index) => index.toString()}></FlatList>
         </Tab>
       </TabView>
-      <View flex-2 row spread style={{position: 'absolute', bottom: 0}}>
-        <UIBtn backgroundColor={color.primary} flex-1 fullWidth>
-          <Text font16 color={Colors.white}>
-            Add To Cart
-          </Text>
-        </UIBtn>
-      </View>
     </View>
   );
 }

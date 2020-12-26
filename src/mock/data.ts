@@ -16,6 +16,29 @@ export const categoryList = [
     },
   ];
 
+  export const blogList = [
+    {
+      image:
+        'https://avantifurniture.id/upload/image/slide/large/eJS5WCo5OBvSHIJa.jpg',
+      name: 'Review',
+    },
+    {
+      image:
+        'https://avantifurniture.id/upload/image/category/source/U5Pvmr8dtaTbkurK.jpg',
+      name: 'News',
+    },
+    {
+      image:
+        'https://avantifurniture.id/upload/image/category/source/1S9yvDhH0Sx4qL8S.jpg',
+      name: 'Tips',
+    },
+    {
+      image:
+        'https://avantifurniture.id/upload/image/slide/large/eJS5WCo5OBvSHIJa.jpg',
+      name: 'Offer',
+    },
+  ];
+
   export const productList = [
     {
       image: 'https://drive.google.com/uc?id=1K5ltJpmSjj4GN21SwrmR-pfaC5w5ljT-',
