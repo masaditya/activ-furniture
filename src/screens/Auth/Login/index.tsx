@@ -1,11 +1,30 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
 import {View, Text, Colors, Button} from 'react-native-ui-lib';
 import color from '../../../components/Color';
 import {HOME_SCREEN, REGISTER_SCREEN} from '../../../navigation/routename';
 import {Input} from '@ui-kitten/components';
+import {useAuthService} from '../../../hook/services';
 
 const LoginScreen = ({navigation}: any) => {
+  const {loginUser} = useAuthService();
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+
+
+  const submitLogin = useCallback(async() => {
+    try {
+      const res = await loginUser(username, password)
+      if(res.data.status !== "gagal"){
+        console.log(res.data)
+      }else{
+        console.log(res.data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }, [username, password]);
+
   return (
     <View flex-1 backgroundColor={Colors.white}>
       <ScrollView>
@@ -23,7 +42,8 @@ const LoginScreen = ({navigation}: any) => {
                 label="Email or Phone Number"
                 status="success"
                 focusable
-                // onChangeText={(nextValue) => setValue(nextValue)}
+                value={username}
+                onChangeText={(nextValue) => setUsername(nextValue)}
               />
             </View>
             <View paddingB-20>
@@ -31,7 +51,8 @@ const LoginScreen = ({navigation}: any) => {
                 label="Password"
                 secureTextEntry
                 status="success"
-                // onChangeText={(nextValue) => setValue(nextValue)}
+                value={password}
+                onChangeText={(nextValue) => setPassword(nextValue)}
               />
             </View>
           </View>
@@ -39,7 +60,7 @@ const LoginScreen = ({navigation}: any) => {
       </ScrollView>
       <View flex-1 row spread style={{position: 'absolute', bottom: 0}}>
         <Button
-          onPress={() => navigation.navigate(HOME_SCREEN)}
+          onPress={submitLogin}
           backgroundColor={color.primary}
           flex-1
           fullWidth>

@@ -24,7 +24,6 @@ import AccountScreen from '../screens/Account';
 import RegisterScreen from '../screens/Auth/Register';
 import ProductNavigation from './ProductNavigation';
 import BlogScreen from '../screens/Blog';
-import ReadBlogScreen from '../screens/ReadBlog';
 import CustomDrawerContent from '../components/DrawerContent/index';
 
 const Drawer = createDrawerNavigator();

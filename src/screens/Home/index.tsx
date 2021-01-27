@@ -4,8 +4,8 @@ import {
   NavigationProp,
   useNavigation,
 } from '@react-navigation/native';
-import {Input} from '@ui-kitten/components';
-import React, {useEffect} from 'react';
+import {Input, ViewPager} from '@ui-kitten/components';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Dimensions, FlatList, ImageBackground} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
@@ -14,10 +14,17 @@ import {View, Text, Button, Image, Colors} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../components/Color';
 import ProductItem from '../../components/ProductItem';
+import {useBrandService, useProductService} from '../../hook/services';
 import {brandList, categoryList, productList} from '../../mock/data';
 import {ACCOUNT_SCREEN, PRODUCT_LIST_SCREEN} from '../../navigation/routename';
 
 export default function HomeScreen({navigation}: any) {
+  const {getAllProduct, getBanner} = useProductService();
+  const {getAllBrand, brandProduct} = useBrandService();
+  const [homeProduct, setHomeProduct] = useState<any[]>([]);
+  const [banner, setBanner] = useState([]);
+  const [homeBrand, setHomeBrand] = useState([]);
+
   const tmp = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const tmp2 = [1, 2, 3, 4];
 
@@ -32,7 +39,34 @@ export default function HomeScreen({navigation}: any) {
         />
       ),
     });
+
+    getProduct();
     return () => {};
+  }, []);
+
+  const getProduct = useCallback(async () => {
+    try {
+      const res = await getAllProduct();
+      if (res) {
+        setHomeProduct([...res.data.data]);
+      }
+      const banner = await getBanner();
+      if (banner) {
+        setBanner(banner.data.data);
+      }
+
+      const brand = await getAllBrand();
+      if (brand) {
+        // console.log(brand.data);
+        setHomeBrand(brand.data.data);
+      }
+      const productBrand = await brandProduct({brand: ['1']});
+      if (productBrand) {
+        console.log(productBrand);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   return (
@@ -40,13 +74,19 @@ export default function HomeScreen({navigation}: any) {
       ListHeaderComponent={
         <>
           <View style={{backgroundColor: Colors.white}}>
-            <Image
-              style={{width: RFPercentage(100), height: RFValue(200)}}
-              source={{
-                uri:
-                  'https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-              }}
-            />
+            <ViewPager>
+              {banner.map((item, key) => {
+                return (
+                  <Image
+                    key={key}
+                    style={{width: RFPercentage(100), height: RFValue(200)}}
+                    source={{
+                      uri: item.featured_image,
+                    }}
+                  />
+                );
+              })}
+            </ViewPager>
             <View padding-20>
               <Input
                 placeholder="Search Product"
@@ -70,7 +110,7 @@ export default function HomeScreen({navigation}: any) {
                 </Text>
               </View>
               <ScrollView showsHorizontalScrollIndicator={false} horizontal>
-                {brandList.map((item, i) => {
+                {homeBrand.map((item, i) => {
                   return (
                     <View padding-10 key={i}>
                       <TouchableOpacity
@@ -84,11 +124,11 @@ export default function HomeScreen({navigation}: any) {
                             borderRadius: RFValue(10),
                           }}
                           source={{
-                            uri: item.image,
+                            uri: item.brand_photo,
                           }}
                         />
                         <Text style={{padding: RFValue(5)}} font14bold>
-                          {item.name}
+                          {item.brand_name}
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -150,8 +190,10 @@ export default function HomeScreen({navigation}: any) {
           </View>
         </>
       }
-      data={productList}
-      renderItem={(item) => <ProductItem {...item.item} />}
+      data={homeProduct}
+      renderItem={(item) => {
+        return <ProductItem {...item.item} />;
+      }}
       numColumns={2}
       keyExtractor={(item, index) => index.toString()}></FlatList>
   );

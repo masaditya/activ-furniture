@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {Button, Tab, TabView, ViewPager} from '@ui-kitten/components';
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   ScrollView,
@@ -13,13 +13,32 @@ import {Image} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../components/Color';
 import ProductItem from '../../components/ProductItem';
+import {useProductService} from '../../hook/services';
 import {productList} from '../../mock/data';
 import DescriptionInfo from './DescriptionInfo';
 
-export default function DetailsScreen() {
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+export default function DetailsScreen(props: any) {
+  const {getDetailProduct} = useProductService();
+  const [productDetail, setProductDetail] = useState({});
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const navigation = useNavigation();
   const tmp = [1, 2, 3, 4];
+
+  useEffect(() => {
+    getDetail();
+    return () => {};
+  }, []);
+
+  const getDetail = useCallback(async () => {
+    // console.log(props.route.params.product.id);
+    try {
+      const res = await getDetailProduct(props.route.params.product.id);
+      if (res) {
+        console.log(res.data.data[0])
+        setProductDetail(res.data.data[0]);
+      }
+    } catch (error) {}
+  }, []);
 
   return (
     <View flex-1 backgroundColor={Colors.white}>
@@ -49,11 +68,11 @@ export default function DetailsScreen() {
 
       <View backgroundColor={Colors.white} padding-15>
         <Text style={{paddingVertical: RFValue(5)}} font16bold>
-          Anne Solid Wood Queen Size
+          {productDetail.title}
         </Text>
         <View row spread centerV paddingT-10>
           <Text font10 color={Colors.grey40}>
-            Sofas // L Shaped Sofas
+            {productDetail.category}
           </Text>
         </View>
       </View>
@@ -66,14 +85,7 @@ export default function DetailsScreen() {
           <View flex-1 backgroundColor={Colors.white} padding-20>
             <ScrollView showsVerticalScrollIndicator={false}>
               <Text>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Reiciendis repellat deserunt velit quia saepe. Velit dolor, sed
-                earum similique, nihil commodi alias ipsa iure necessitatibus
-                aperiam distinctio aliquid, facere eaque. Lorem ipsum dolor sit
-                amet consectetur adipisicing elit. Atque, molestias voluptates
-                quae ad doloremque perferendis impedit labore inventore,
-                necessitatibus neque, veniam eligendi ipsum minima possimus nemo
-                architecto voluptatum modi consequuntur.
+                {productDetail.post_content}
               </Text>
               <View row paddingV-10>
                 <TouchableOpacity
@@ -106,10 +118,10 @@ export default function DetailsScreen() {
                 />
               </View>
               <View paddingV-20>
-                <DescriptionInfo field="Brand" value="Furniwood" />
+                <DescriptionInfo field="Brand" value={productDetail.brand} />
                 <DescriptionInfo
                   field="Dimension (in)"
-                  value="H 22 x W 47 x D 16"
+                  value={productDetail.dimension}
                 />
                 <DescriptionInfo field="Colour" value="Honey Oak" />
                 <DescriptionInfo field="Room Type" value="Bedroom" />

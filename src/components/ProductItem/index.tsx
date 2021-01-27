@@ -5,7 +5,7 @@ import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {View, Text, Colors} from 'react-native-ui-lib';
 import {DETAIL_PRODUCT_SCREEN} from '../../navigation/routename';
 
-const ProductItem = (props: {image: string; name: string; price?: string}) => {
+const ProductItem = (props?: any) => {
   const {navigate} = useNavigation();
   return (
     <View
@@ -14,11 +14,14 @@ const ProductItem = (props: {image: string; name: string; price?: string}) => {
       style={{aspectRatio: 1, flex: 1 / 2}}>
       <TouchableOpacity
         onPress={() => {
-          navigate('Product', {screen: DETAIL_PRODUCT_SCREEN});
+          navigate('Product', {
+            screen: DETAIL_PRODUCT_SCREEN,
+            params: {product: props},
+          });
         }}>
         <ImageBackground
           source={{
-            uri: props.image,
+            uri: props.image[0],
           }}
           imageStyle={{borderRadius: RFValue(10)}}
           style={{
@@ -27,7 +30,7 @@ const ProductItem = (props: {image: string; name: string; price?: string}) => {
             justifyContent: 'center',
           }}></ImageBackground>
         <Text numberOfLines={1} style={{padding: RFValue(5)}} font14bold>
-          {props.name}
+          {props.title}
         </Text>
         {/* <Text
           style={{paddingHorizontal: RFValue(5)}}

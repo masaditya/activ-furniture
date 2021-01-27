@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Colors,
-  Image,
-  Button,
-  RadioButton,
-  RadioGroup,
-} from 'react-native-ui-lib';
+import {View, Text, Colors, Image, Button} from 'react-native-ui-lib';
 import {Input} from '@ui-kitten/components';
 import {ScrollView} from 'react-native-gesture-handler';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
@@ -63,7 +55,7 @@ const AccountScreen = ({navigation}: any) => {
           </Button>
         </View>
 
-        <View
+        {/* <View
           row
           spread
           centerV
@@ -76,8 +68,8 @@ const AccountScreen = ({navigation}: any) => {
             <Icon name="add" size={RFValue(20)} />
             Add New
           </Text>
-        </View>
-        <RadioGroup
+        </View> */}
+        {/* <RadioGroup
           initialValue="home"
           onValueChange={(e: any) => console.log(e)}>
           <View
@@ -140,17 +132,17 @@ const AccountScreen = ({navigation}: any) => {
               <RadioButton value="farm" color={color.primary} />
             </View>
           </View>
-        </RadioGroup>
-        <Button
-          onPress={() => navigation.navigate(LOGIN_SCREEN)}
-          margin-20
-          fullWidth
-          backgroundColor={Colors.red10}>
-          <Text font14 white>
-            Logout
-          </Text>
-        </Button>
+        </RadioGroup> */}
       </ScrollView>
+      <Button
+        onPress={() => navigation.navigate(LOGIN_SCREEN)}
+        margin-20
+        fullWidth
+        backgroundColor={Colors.red10}>
+        <Text font14 white>
+          Logout
+        </Text>
+      </Button>
     </View>
   );
 };
