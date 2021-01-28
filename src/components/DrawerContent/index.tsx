@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useContext} from 'react';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {View, Text, Image} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -11,11 +11,26 @@ import {
   HOME_SCREEN,
   LOGIN_SCREEN,
 } from '../../navigation/routename';
-import { useAuthService } from '../../hook/services';
+import {useAuthService} from '../../hook/services';
+import {RootContext} from '../../context';
+import {LOGOUT_SUCCESS} from '../../context/actionTypes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CustomDrawerContent = (props: any) => {
-  const {logoutUser} =useAuthService()
+  // @ts-ignore
+  // const {dispatch} = useContext(RootContext);
+  // const {logoutUser} = useAuthService();
 
+  // const actionLogout = useCallback(async () => {
+  //   try {
+  //     const res = await logoutUser();
+  //     if (res) {
+  //       dispatch({type: LOGOUT_SUCCESS});
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, []);
 
   return (
     <DrawerContentScrollView {...props}>
@@ -73,18 +88,18 @@ const CustomDrawerContent = (props: any) => {
             Help
           </Text>
         </View>
-        <View row paddingV-15 centerV>
+        {/* <View row paddingV-15 centerV>
           <Icon name="log-out" size={RFValue(20)} color={color.primary} />
           <Text
             style={{paddingLeft: RFValue(20)}}
             font16bold
-            onPress={async() => {
-              await logoutUser()
-              props.navigation.navigate(LOGIN_SCREEN)
+            onPress={async () => {
+              // await AsyncStorage.removeItem('user');
+              // dispatch({type: LOGOUT_SUCCESS});
             }}>
             Logout
           </Text>
-        </View>
+        </View> */}
       </View>
     </DrawerContentScrollView>
   );

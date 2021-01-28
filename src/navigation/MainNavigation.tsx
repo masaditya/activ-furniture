@@ -46,101 +46,94 @@ export default function MainNavigation(props: any) {
   };
 
   return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        drawerContent={CustomDrawerContent}
-        initialRouteName={LOGIN_SCREEN}>
-        <Drawer.Screen
-          name={LOGIN_SCREEN}
-          component={LoginScreen}
-          options={{headerShown: false, gestureEnabled: false}}
-        />
-        <Drawer.Screen
-          name={REGISTER_SCREEN}
-          component={RegisterScreen}
-          options={({navigation}) => ({
-            ...mainHeaderOptions,
-            gestureEnabled: false,
-            headerTitle: '',
-            headerRight: () => null,
-            headerLeft: (props) => (
-              <HeaderBackButton onPress={() => navigation.goBack()} />
-            ),
-          })}
-        />
-        <Drawer.Screen
-          options={mainHeaderOptions}
-          name={HOME_SCREEN}
-          component={HomeScreen}
-        />
-        <Drawer.Screen
-          options={({navigation}) => ({
-            headerShown: true,
-            headerStyle: {
-              elevation: 0,
-              shadowOpacity: 0,
-            },
-            headerLeft: () => (
-              <HeaderBackButton onPress={() => navigation.goBack()} />
-            ),
-            headerTitle: '',
-          })}
-          name={DETAIL_PRODUCT_SCREEN}
-          component={DetailsScreen}
-        />
-        <Drawer.Screen name="Product" component={ProductNavigation} />
-        <Drawer.Screen
-          options={({navigation}) => ({
-            ...mainHeaderOptions,
-            gestureEnabled: false,
-            headerLeft: (props) => (
-              <HeaderBackButton onPress={() => navigation.goBack()} />
-            ),
-          })}
-          name={PRODUCT_LIST_SCREEN}
-          component={ProductListScreen}
-        />
-        <Drawer.Screen
-          options={({navigation}) => ({
-            ...mainHeaderOptions,
-            gestureEnabled: false,
-            headerLeft: (props) => (
-              <HeaderBackButton onPress={() => navigation.goBack()} />
-            ),
-          })}
-          name={BRAND_LIST_SCREEN}
-          component={BrandListScreen}
-        />
-        <Drawer.Screen
-          options={({navigation}) => ({
-            ...mainHeaderOptions,
-            gestureEnabled: false,
-            headerLeft: (props) => (
-              <HeaderBackButton onPress={() => navigation.goBack()} />
-            ),
-          })}
-          name={CATEGORY_LIST_SCREEN}
-          component={CategoryListScreen}
-        />
-        <Drawer.Screen
-          options={{
-            ...mainHeaderOptions,
-            headerTitle: 'My Profile',
-            headerRight: () => null,
-          }}
-          name={ACCOUNT_SCREEN}
-          component={AccountScreen}
-        />
-        <Drawer.Screen
-          options={{
-            ...mainHeaderOptions,
-            headerTitle: 'News',
-            headerRight: () => null,
-          }}
-          name={BLOG_SCREEN}
-          component={BlogScreen}
-        />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <Drawer.Navigator
+      drawerContent={CustomDrawerContent}
+      initialRouteName={HOME_SCREEN}>
+      <Drawer.Screen
+        name={REGISTER_SCREEN}
+        component={RegisterScreen}
+        options={({navigation}) => ({
+          ...mainHeaderOptions,
+          gestureEnabled: false,
+          headerTitle: '',
+          headerRight: () => null,
+          headerLeft: (props) => (
+            <HeaderBackButton onPress={() => navigation.goBack()} />
+          ),
+        })}
+      />
+      <Drawer.Screen
+        options={mainHeaderOptions}
+        name={HOME_SCREEN}
+        component={HomeScreen}
+      />
+      <Drawer.Screen
+        options={({navigation}) => ({
+          headerShown: true,
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          headerLeft: () => (
+            <HeaderBackButton onPress={() => navigation.goBack()} />
+          ),
+          headerTitle: '',
+        })}
+        name={DETAIL_PRODUCT_SCREEN}
+        component={DetailsScreen}
+      />
+      <Drawer.Screen name="Product" component={ProductNavigation} />
+      <Drawer.Screen
+        options={({navigation}) => ({
+          ...mainHeaderOptions,
+          gestureEnabled: false,
+          headerLeft: (props) => (
+            <HeaderBackButton onPress={() => navigation.goBack()} />
+          ),
+        })}
+        name={PRODUCT_LIST_SCREEN}
+        component={ProductListScreen}
+      />
+      <Drawer.Screen
+        options={({navigation}) => ({
+          ...mainHeaderOptions,
+          gestureEnabled: false,
+          headerLeft: (props) => (
+            <HeaderBackButton onPress={() => navigation.goBack()} />
+          ),
+        })}
+        name={BRAND_LIST_SCREEN}
+        component={BrandListScreen}
+      />
+      <Drawer.Screen
+        options={({navigation}) => ({
+          ...mainHeaderOptions,
+          gestureEnabled: false,
+          headerLeft: (props) => (
+            <HeaderBackButton onPress={() => navigation.goBack()} />
+          ),
+        })}
+        name={CATEGORY_LIST_SCREEN}
+        component={CategoryListScreen}
+      />
+      <Drawer.Screen
+        options={{
+          ...mainHeaderOptions,
+          headerTitle: 'My Profile',
+          headerRight: () => null,
+        }}
+        name={ACCOUNT_SCREEN}
+        component={AccountScreen}
+      />
+      <Drawer.Screen
+        options={{
+          ...mainHeaderOptions,
+          headerTitle: 'News',
+          headerRight: () => null,
+        }}
+        name={BLOG_SCREEN}
+        component={BlogScreen}
+      />
+    </Drawer.Navigator>
   );
 }

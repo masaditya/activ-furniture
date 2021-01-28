@@ -1,5 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {RESTORE_FAILED, RESTORE_TOKEN} from '../context/actionTypes';
 
 export const useProductService = () => {
   const baseUrl = 'http://catalog.wlrapps.com/Api_app';
@@ -59,22 +60,44 @@ export const useAuthService = () => {
     }
     return await axios.post(`${baseUrl}/logout`);
   };
-  const storeUsername = async (value: string) => {
+  const storeUsername = async (value: any) => {
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem('user', jsonValue);
+      return {
+        type: 'LOGIN_SUCCESS',
+        payload: {
+          user: value,
+        },
+      };
     } catch (e) {
       // saving error
       return;
     }
   };
   const getUsername = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('user');
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch (e) {
-      return;
-    }
+    let response = await AsyncStorage.getItem('user')
+      .then((result) => {
+        if (result) {
+          return {
+            type: RESTORE_TOKEN,
+            payload: {
+              user: JSON.parse(result),
+            },
+          };
+        } else {
+          return {
+            type: RESTORE_FAILED,
+            payload: {
+              user: result != null ? JSON.parse(result) : null,
+            },
+          };
+        }
+      })
+      .catch((error) => {
+        return {};
+      });
+    return response;
   };
 
   const getUserInfo = async (username: string) =>

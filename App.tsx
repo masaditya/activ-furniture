@@ -6,8 +6,9 @@ import {RFValue} from 'react-native-responsive-fontsize';
 import color from './src/components/Color';
 import * as eva from '@eva-design/eva';
 import {ApplicationProvider} from '@ui-kitten/components';
-import {Store, UserContext} from './src/context/authContext';
 import {useAuthService} from './src/hook/services';
+import {RootProvider} from './src/context';
+import RootNavigation from './src/navigation';
 
 Colors.loadColors(color);
 
@@ -71,11 +72,11 @@ ThemeManager.setComponentForcedTheme('Text', (props: any) => {
 function App() {
   const {getUsername, getUserInfo, storeUsername} = useAuthService();
   return (
-    <Store>
+    <RootProvider>
       <ApplicationProvider {...eva} theme={eva.light}>
-        <MainNavigation />
+        <RootNavigation />
       </ApplicationProvider>
-    </Store>
+    </RootProvider>
   );
 }
 export default App;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useContext, useEffect} from 'react';
 import {View, Text, Colors, Image, Button} from 'react-native-ui-lib';
 import {Input} from '@ui-kitten/components';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -6,8 +6,26 @@ import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import color from '../../components/Color';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {LOGIN_SCREEN} from '../../navigation/routename';
+import {useAuthService} from '../../hook/services';
+import {RootContext} from '../../context';
+import {LOGOUT_SUCCESS} from '../../context/actionTypes';
 
 const AccountScreen = ({navigation}: any) => {
+  const {getUsername, getUserInfo, logoutUser} = useAuthService();
+  // @ts-ignore
+  const {dispatch} = useContext(RootContext);
+  useEffect(() => {
+    getInfo();
+    return () => {};
+  }, []);
+
+  const getInfo = useCallback(async () => {
+    const info: any = await getUsername();
+    // console.log(info.payload.user.username);
+    const username = info.payload.user.username;
+    const res = await getUserInfo(username);
+    console.log(res);
+  }, []);
   return (
     <View backgroundColor={Colors.white} flex-1 paddingV-20>
       <ScrollView>
@@ -135,7 +153,14 @@ const AccountScreen = ({navigation}: any) => {
         </RadioGroup> */}
       </ScrollView>
       <Button
-        onPress={() => navigation.navigate(LOGIN_SCREEN)}
+        onPress={async () => {
+          let res = await logoutUser();
+          if (res) {
+            dispatch({
+              type: LOGOUT_SUCCESS,
+            });
+          }
+        }}
         margin-20
         fullWidth
         backgroundColor={Colors.red10}>
