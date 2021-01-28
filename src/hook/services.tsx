@@ -88,3 +88,14 @@ export const useAuthService = () => {
     getUsername,
   } as const;
 };
+
+export const useBlogService = () => {
+  const baseUrl = 'http://catalog.wlrapps.com/Api_app/blog';
+  const getListBlog = async () => axios.get(`${baseUrl}/all`);
+  const readBlog = async (id: string) => axios.get(`${baseUrl}/${id}`);
+
+  return {
+    getListBlog,
+    readBlog,
+  };
+};

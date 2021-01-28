@@ -7,13 +7,13 @@ import {READ_BLOG_SCREEN} from '../../navigation/routename';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../Color';
 
-const BlogItem = (props: {image: string; name: string}) => {
+const BlogItem = (props: any) => {
   const navigation = useNavigation();
   return (
     <View padding-10>
       <ImageBackground
         source={{
-          uri: props.image,
+          uri: props.imgurl,
         }}
         imageStyle={{borderRadius: RFValue(10)}}
         style={{
@@ -28,28 +28,25 @@ const BlogItem = (props: {image: string; name: string}) => {
             flex-3
             style={{borderRadius: RFValue(5)}}>
             <Text color={color.primary} font14bold>
-              {props.name.toString().toUpperCase()}
+              {props.post_type.toString().toUpperCase()}
             </Text>
             <Text font12 numberOfLines={2}>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ex nam
-              ipsa et, quaerat quos suscipit sit debitis architecto vel ab quo,
-              officia ad ullam earum mollitia molestias id! Excepturi,
-              similique.
+              {props.post_title}
             </Text>
             <View row spread marginT-20>
               <Text font10 grey30>
                 <Icon name="person" />
-                Admin
+                {props.author}
               </Text>
               <Text font10 grey30>
-                <Icon name="timer" />4 Min
+                <Icon name="timer" />{props.publish_date}
               </Text>
             </View>
           </View>
           <View flex-2 bottom margin-5>
             <Button
               onPress={() =>
-                navigation.navigate('Product', {screen: READ_BLOG_SCREEN})
+                navigation.navigate('Product', {screen: READ_BLOG_SCREEN, params : {id : props.id}})
               }
               backgroundColor={color.primary}>
               <Text white>Read More</Text>

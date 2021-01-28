@@ -99,7 +99,7 @@ export default function HomeScreen({navigation}: any) {
         <>
           <View style={{backgroundColor: Colors.white}}>
             <ViewPager>
-              {banner.map((item, key) => {
+              {banner.map((item : any, key) => {
                 return (
                   <Image
                     key={key}
@@ -136,7 +136,7 @@ export default function HomeScreen({navigation}: any) {
                 </Text>
               </View>
               <ScrollView showsHorizontalScrollIndicator={false} horizontal>
-                {homeBrand.map((item, i) => {
+                {homeBrand.map((item : any, i) => {
                   return (
                     <View padding-10 key={i}>
                       <TouchableOpacity
@@ -175,7 +175,7 @@ export default function HomeScreen({navigation}: any) {
                 </Text>
               </View>
               <ScrollView showsHorizontalScrollIndicator={false} horizontal>
-                {homeCategory.map((item, i) => {
+                {homeCategory.map((item : any, i) => {
                   return (
                     <View padding-10 key={i}>
                       <TouchableOpacity

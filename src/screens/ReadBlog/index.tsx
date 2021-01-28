@@ -1,12 +1,28 @@
-import React from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
 import Markdown from 'react-native-markdown-display';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {View, Text, Colors, Image} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../components/Color';
+import {useBlogService} from '../../hook/services';
 
-const ReadBlogScreen = () => {
+const ReadBlogScreen = ({route, navigation}: any) => {
+  const {readBlog} = useBlogService();
+  useEffect(() => {
+    getBlogContent();
+    return () => {};
+  }, []);
+
+  const getBlogContent = useCallback(async () => {
+    try {
+      const res = await readBlog(route.params.id);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [route.params]);
+
   return (
     <View flexG backgroundColor={Colors.white}>
       <ScrollView>

@@ -19,7 +19,7 @@ import DescriptionInfo from './DescriptionInfo';
 
 export default function DetailsScreen(props: any) {
   const {getDetailProduct} = useProductService();
-  const [productDetail, setProductDetail] = useState({});
+  const [productDetail, setProductDetail] = useState<any>({});
   const [selectedIndex, setSelectedIndex] = useState(0);
   const navigation = useNavigation();
   const tmp = [1, 2, 3, 4];
