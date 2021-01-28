@@ -11,8 +11,12 @@ import {
   HOME_SCREEN,
   LOGIN_SCREEN,
 } from '../../navigation/routename';
+import { useAuthService } from '../../hook/services';
 
 const CustomDrawerContent = (props: any) => {
+  const {logoutUser} =useAuthService()
+
+
   return (
     <DrawerContentScrollView {...props}>
       <View row centerV paddingV-40 paddingH-20>
@@ -74,7 +78,10 @@ const CustomDrawerContent = (props: any) => {
           <Text
             style={{paddingLeft: RFValue(20)}}
             font16bold
-            onPress={() => props.navigation.navigate(LOGIN_SCREEN)}>
+            onPress={async() => {
+              await logoutUser()
+              props.navigation.navigate(LOGIN_SCREEN)
+            }}>
             Logout
           </Text>
         </View>

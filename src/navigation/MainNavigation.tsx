@@ -12,6 +12,8 @@ import {
   REGISTER_SCREEN,
   BLOG_SCREEN,
   READ_BLOG_SCREEN,
+  BRAND_LIST_SCREEN,
+  CATEGORY_LIST_SCREEN,
 } from './routename';
 import DetailsScreen from '../screens/Details';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -25,6 +27,8 @@ import RegisterScreen from '../screens/Auth/Register';
 import ProductNavigation from './ProductNavigation';
 import BlogScreen from '../screens/Blog';
 import CustomDrawerContent from '../components/DrawerContent/index';
+import BrandListScreen from '../screens/BrandList';
+import CategoryListScreen from '../screens/CategoryList';
 
 const Drawer = createDrawerNavigator();
 
@@ -95,6 +99,28 @@ export default function MainNavigation(props: any) {
           })}
           name={PRODUCT_LIST_SCREEN}
           component={ProductListScreen}
+        />
+        <Drawer.Screen
+          options={({navigation}) => ({
+            ...mainHeaderOptions,
+            gestureEnabled: false,
+            headerLeft: (props) => (
+              <HeaderBackButton onPress={() => navigation.goBack()} />
+            ),
+          })}
+          name={BRAND_LIST_SCREEN}
+          component={BrandListScreen}
+        />
+        <Drawer.Screen
+          options={({navigation}) => ({
+            ...mainHeaderOptions,
+            gestureEnabled: false,
+            headerLeft: (props) => (
+              <HeaderBackButton onPress={() => navigation.goBack()} />
+            ),
+          })}
+          name={CATEGORY_LIST_SCREEN}
+          component={CategoryListScreen}
         />
         <Drawer.Screen
           options={{

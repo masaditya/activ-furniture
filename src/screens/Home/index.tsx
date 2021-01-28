@@ -16,14 +16,20 @@ import color from '../../components/Color';
 import ProductItem from '../../components/ProductItem';
 import {useBrandService, useProductService} from '../../hook/services';
 import {brandList, categoryList, productList} from '../../mock/data';
-import {ACCOUNT_SCREEN, PRODUCT_LIST_SCREEN} from '../../navigation/routename';
+import {
+  ACCOUNT_SCREEN,
+  BRAND_LIST_SCREEN,
+  CATEGORY_LIST_SCREEN,
+  PRODUCT_LIST_SCREEN,
+} from '../../navigation/routename';
 
 export default function HomeScreen({navigation}: any) {
   const {getAllProduct, getBanner} = useProductService();
-  const {getAllBrand, brandProduct} = useBrandService();
+  const {getAllBrand, getAllCategory} = useBrandService();
   const [homeProduct, setHomeProduct] = useState<any[]>([]);
   const [banner, setBanner] = useState([]);
   const [homeBrand, setHomeBrand] = useState([]);
+  const [homeCategory, setHomeCategory] = useState([]);
 
   const tmp = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const tmp2 = [1, 2, 3, 4];
@@ -41,6 +47,9 @@ export default function HomeScreen({navigation}: any) {
     });
 
     getProduct();
+    getBanners();
+    getBrands();
+    getCategories();
     return () => {};
   }, []);
 
@@ -50,23 +59,38 @@ export default function HomeScreen({navigation}: any) {
       if (res) {
         setHomeProduct([...res.data.data]);
       }
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const getBanners = useCallback(async () => {
+    try {
       const banner = await getBanner();
       if (banner) {
         setBanner(banner.data.data);
       }
+    } catch (error) {}
+  }, []);
 
+  const getBrands = useCallback(async () => {
+    try {
       const brand = await getAllBrand();
       if (brand) {
         // console.log(brand.data);
         setHomeBrand(brand.data.data);
       }
-      const productBrand = await brandProduct({brand: ['1']});
-      if (productBrand) {
-        console.log(productBrand);
+    } catch (error) {}
+  }, []);
+
+  const getCategories = useCallback(async () => {
+    try {
+      const category = await getAllCategory();
+      if (category) {
+        console.log(category.data);
+        setHomeCategory(category.data.data);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }, []);
 
   return (
@@ -103,7 +127,9 @@ export default function HomeScreen({navigation}: any) {
               <View row paddingT-10 spread centerV>
                 <Text font14>Brand</Text>
                 <Text
-                  onPress={() => navigation.navigate(PRODUCT_LIST_SCREEN)}
+                  onPress={() =>
+                    navigation.navigate(BRAND_LIST_SCREEN, homeBrand)
+                  }
                   font12
                   color={color.primary}>
                   View All
@@ -115,7 +141,9 @@ export default function HomeScreen({navigation}: any) {
                     <View padding-10 key={i}>
                       <TouchableOpacity
                         onPress={() =>
-                          navigation.navigate(PRODUCT_LIST_SCREEN)
+                          navigation.navigate(PRODUCT_LIST_SCREEN, {
+                            brand_id: item.brand_id,
+                          })
                         }>
                         <Image
                           style={{
@@ -138,19 +166,23 @@ export default function HomeScreen({navigation}: any) {
               <View row paddingT-10 spread centerV>
                 <Text font14>Categories</Text>
                 <Text
-                  onPress={() => navigation.navigate(PRODUCT_LIST_SCREEN)}
+                  onPress={() =>
+                    navigation.navigate(CATEGORY_LIST_SCREEN, homeCategory)
+                  }
                   font12
                   color={color.primary}>
                   View All
                 </Text>
               </View>
               <ScrollView showsHorizontalScrollIndicator={false} horizontal>
-                {categoryList.map((item, i) => {
+                {homeCategory.map((item, i) => {
                   return (
                     <View padding-10 key={i}>
                       <TouchableOpacity
                         onPress={() =>
-                          navigation.navigate(PRODUCT_LIST_SCREEN)
+                          navigation.navigate(PRODUCT_LIST_SCREEN, {
+                            category_id: item.category_id,
+                          })
                         }>
                         <Image
                           style={{
@@ -159,18 +191,19 @@ export default function HomeScreen({navigation}: any) {
                             borderRadius: RFValue(10),
                           }}
                           source={{
-                            uri: item.image,
+                            uri: item.category_photo,
                           }}
                         />
                         <Text style={{padding: RFValue(5)}} font14bold>
-                          {item.name}
+                          {item.category_name}
                         </Text>
-                        <Text
+                        {/* <Text
                           style={{paddingHorizontal: RFValue(5)}}
                           font10
-                          color={Colors.grey40}>
-                          1984 items
-                        </Text>
+                          color={Colors.grey40}
+                          numberOfLines={2}>
+                          {item.category_info}
+                        </Text> */}
                       </TouchableOpacity>
                     </View>
                   );

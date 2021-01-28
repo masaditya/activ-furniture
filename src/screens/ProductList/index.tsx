@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Dimensions, FlatList} from 'react-native';
 import {ScrollView, TouchableHighlight} from 'react-native-gesture-handler';
 import {RFValue} from 'react-native-responsive-fontsize';
@@ -14,13 +14,16 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../components/Color';
 import ProductItem from '../../components/ProductItem';
+import {useBrandService, useProductService} from '../../hook/services';
 import {productList} from '../../mock/data';
 import RightDrawer from './RightDrawer';
 
-const ProductListScreen = () => {
-  const navigation = useNavigation();
+const ProductListScreen = ({route, navigation}: any) => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [modalVisible, setModalVisible] = useState(false);
+  const {brandProduct, categoryProduct} = useBrandService();
+  const [products, setProducts] = useState([]);
+
   const [priceFilter, setPriceFilter] = useState<{min: number; max: number}>({
     min: 100,
     max: 200,
@@ -37,6 +40,27 @@ const ProductListScreen = () => {
       ),
     });
   }, []);
+
+  useEffect(() => {
+    let type = Object.keys(route.params);
+    if (type[0] === 'brand_id') getProductByBrand();
+    else getProductByCategory();
+    return () => {};
+  }, [route.params]);
+
+  const getProductByBrand = useCallback(async () => {
+    try {
+      const res = await brandProduct({brand: [route.params.brand_id]});
+      setProducts(res.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [route.params]);
+
+  const getProductByCategory = useCallback(async () => {
+    const res = await categoryProduct({category: [route.params.category_id]});
+    setProducts(res.data.data);
+  }, [route.params]);
 
   return (
     <View flex-1 backgroundColor={Colors.white}>
@@ -101,7 +125,7 @@ const ProductListScreen = () => {
             </ScrollView>
           </View>
         }
-        data={productList}
+        data={products}
         renderItem={(item) => <ProductItem {...item.item} />}
         numColumns={2}
         keyExtractor={(item, index) => index.toString()}

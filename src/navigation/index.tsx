@@ -9,6 +9,7 @@ import {AUTH_NAV, MAIN_NAV} from './routename';
 const RootStack = createStackNavigator();
 
 const RootNavigation = () => {
+  
   return (
     <NavigationContainer>
       <RootStack.Navigator mode="modal">

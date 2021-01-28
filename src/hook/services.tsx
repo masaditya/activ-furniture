@@ -1,4 +1,5 @@
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const useProductService = () => {
   const baseUrl = 'http://catalog.wlrapps.com/Api_app';
@@ -25,9 +26,15 @@ export const useBrandService = () => {
   const getAllBrand = async () => await axios.get(`${baseUrl}/master/brand`);
   const brandProduct = async (brand: {brand: string[]}) =>
     await axios.post(`${baseUrl}/product/all`);
+  const getAllCategory = async () =>
+    await axios.get(`${baseUrl}/master/categories`);
+  const categoryProduct = async (category: {category: string[]}) =>
+    await axios.post(`${baseUrl}/product/all`);
   return {
     getAllBrand,
     brandProduct,
+    getAllCategory,
+    categoryProduct,
   } as const;
 };
 
@@ -38,16 +45,38 @@ export const useAuthService = () => {
     const body = new URLSearchParams();
     body.append('username', username);
     body.append('password', password);
-    return await axios.post(
-      `${baseUrl}/login`,
-      body,
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
+    return await axios.post(`${baseUrl}/login`, body, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-    )};
-  const logoutUser = async () => await axios.post(`${baseUrl}/logout`);
+    });
+  };
+  const logoutUser = async () => {
+    try {
+      await AsyncStorage.removeItem('user');
+    } catch (e) {
+      console.log(e);
+    }
+    return await axios.post(`${baseUrl}/logout`);
+  };
+  const storeUsername = async (value: string) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem('user', jsonValue);
+    } catch (e) {
+      // saving error
+      return;
+    }
+  };
+  const getUsername = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('user');
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      return;
+    }
+  };
+
   const getUserInfo = async (username: string) =>
     axios.get(`${baseUrl}/get_user/${username}`);
 
@@ -55,5 +84,7 @@ export const useAuthService = () => {
     loginUser,
     logoutUser,
     getUserInfo,
+    storeUsername,
+    getUsername,
   } as const;
 };

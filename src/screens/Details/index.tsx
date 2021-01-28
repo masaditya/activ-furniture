@@ -30,11 +30,9 @@ export default function DetailsScreen(props: any) {
   }, []);
 
   const getDetail = useCallback(async () => {
-    // console.log(props.route.params.product.id);
     try {
       const res = await getDetailProduct(props.route.params.product.id);
       if (res) {
-        console.log(res.data.data[0])
         setProductDetail(res.data.data[0]);
       }
     } catch (error) {}
@@ -84,9 +82,7 @@ export default function DetailsScreen(props: any) {
         <Tab title={() => <Text color={color.primary}>Description</Text>}>
           <View flex-1 backgroundColor={Colors.white} padding-20>
             <ScrollView showsVerticalScrollIndicator={false}>
-              <Text>
-                {productDetail.post_content}
-              </Text>
+              <Text>{productDetail.post_content}</Text>
               <View row paddingV-10>
                 <TouchableOpacity
                   style={{

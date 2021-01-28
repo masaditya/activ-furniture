@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
 import {View, Text, Colors, Button} from 'react-native-ui-lib';
 import color from '../../../components/Color';
@@ -7,21 +7,34 @@ import {Input} from '@ui-kitten/components';
 import {useAuthService} from '../../../hook/services';
 
 const LoginScreen = ({navigation}: any) => {
-  const {loginUser} = useAuthService();
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const {loginUser, storeUsername, getUsername} = useAuthService();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
+  useEffect(() => {
+    if (checkUserdata()) navigation.navigate(HOME_SCREEN);
+    return () => {};
+  }, []);
 
-  const submitLogin = useCallback(async() => {
+  const checkUserdata = useCallback(async () => {
+    const userdata = await getUsername();
+    console.log('userdata', userdata);
+    return userdata === null ? true : false;
+  }, []);
+
+  const submitLogin = useCallback(async () => {
     try {
-      const res = await loginUser(username, password)
-      if(res.data.status !== "gagal"){
-        console.log(res.data)
-      }else{
-        console.log(res.data)
+      const res = await loginUser(username, password);
+      if (res.data.status === 'sukses') {
+        console.log(res.data.data[0]);
+        storeUsername(res.data.data[0]).then((result) => {
+          navigation.navigate(HOME_SCREEN);
+        });
+      } else {
+        console.log(res.data);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }, [username, password]);
 
