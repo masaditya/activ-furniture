@@ -25,17 +25,47 @@ export const useProductService = () => {
 export const useBrandService = () => {
   const baseUrl = 'http://catalog.wlrapps.com/Api_app';
   const getAllBrand = async () => await axios.get(`${baseUrl}/master/brand`);
-  const brandProduct = async (brand: {brand: string[]}) =>
-    await axios.post(`${baseUrl}/product/all`);
+  const brandProduct = async (brand: {brand: string[]}) => {
+    const body = new URLSearchParams();
+    // @ts-ignore
+    body.append('brand', JSON.stringify(brand));
+    return await axios.post(`${baseUrl}/product/all`, body, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+  };
   const getAllCategory = async () =>
     await axios.get(`${baseUrl}/master/categories`);
-  const categoryProduct = async (category: {category: string[]}) =>
-    await axios.post(`${baseUrl}/product/all`);
+  const categoryProduct = async (category: {category: string[]}) => {
+    const body = new URLSearchParams();
+    // @ts-ignore
+    body.append('category', JSON.stringify(category));
+    return await axios.post(`${baseUrl}/product/all`, body, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+  };
+
+  const filterProduct = async (brand: {brand: string[]},category: {category: string[]})=> {
+    const body = new URLSearchParams();
+    // @ts-ignore
+    body.append('category', JSON.stringify(category));
+    body.append('brand', JSON.stringify(brand));
+    return await axios.post(`${baseUrl}/product/all`, body, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+  }
+
   return {
     getAllBrand,
     brandProduct,
     getAllCategory,
     categoryProduct,
+    filterProduct
   } as const;
 };
 
@@ -56,7 +86,6 @@ export const useAuthService = () => {
     try {
       await AsyncStorage.removeItem('user');
     } catch (e) {
-      console.log(e);
     }
     return await axios.post(`${baseUrl}/logout`);
   };

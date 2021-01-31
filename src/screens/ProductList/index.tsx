@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Dimensions, FlatList} from 'react-native';
+import {Dimensions, FlatList, ToastAndroid} from 'react-native';
 import {ScrollView, TouchableHighlight} from 'react-native-gesture-handler';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {
@@ -16,13 +16,27 @@ import color from '../../components/Color';
 import ProductItem from '../../components/ProductItem';
 import {useBrandService, useProductService} from '../../hook/services';
 import {productList} from '../../mock/data';
+import EmptyProduct from './EmptyProduct';
 import RightDrawer from './RightDrawer';
 
 const ProductListScreen = ({route, navigation}: any) => {
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const {
+    getAllBrand,
+    getAllCategory,
+    brandProduct,
+    categoryProduct,
+    filterProduct,
+  } = useBrandService();
+
+  const {getAllProduct} = useProductService();
   const [modalVisible, setModalVisible] = useState(false);
-  const {brandProduct, categoryProduct} = useBrandService();
   const [products, setProducts] = useState([]);
+
+  const [optionBrands, setOptionBrands] = useState([]);
+  const [optionCategory, setOptionCategory] = useState([]);
+
+  const [selectedBrand, setSelectedBrand] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
 
   const [priceFilter, setPriceFilter] = useState<{min: number; max: number}>({
     min: 100,
@@ -39,13 +53,53 @@ const ProductListScreen = ({route, navigation}: any) => {
         </View>
       ),
     });
-  }, []);
+    getBrands();
+    getCategories();
+    ToastAndroid.show('Init', ToastAndroid.SHORT);
+  }, [route]);
 
   useEffect(() => {
-    let type = Object.keys(route.params);
-    if (type[0] === 'brand_id') getProductByBrand();
-    else getProductByCategory();
+    if (route.params) {
+      let type = Object.keys(route.params);
+      if (type[0] === 'brand_id') getProductByBrand();
+      else getProductByCategory();
+    } else {
+      getAllProducts();
+    }
     return () => {};
+  }, [route.params]);
+
+  const getBrands = useCallback(async () => {
+    try {
+      const brand = await getAllBrand();
+      if (brand) {
+        setOptionBrands(brand.data.data);
+      }
+    } catch (error) {
+      ToastAndroid.show('Error Get Brands', ToastAndroid.SHORT);
+    }
+  }, []);
+
+  const getCategories = useCallback(async () => {
+    try {
+      const category = await getAllCategory();
+
+      if (category) {
+        setOptionCategory(category.data.data);
+      }
+    } catch (error) {
+      ToastAndroid.show('Error Get Categories', ToastAndroid.SHORT);
+    }
+  }, []);
+
+  const getAllProducts = useCallback(async () => {
+    ToastAndroid.show('Get Products', ToastAndroid.SHORT);
+    try {
+      const res = await getAllProduct();
+      setProducts(res.data.data);
+    } catch (error) {
+      ToastAndroid.show('Error Get Products', ToastAndroid.SHORT);
+    }
   }, [route.params]);
 
   const getProductByBrand = useCallback(async () => {
@@ -53,7 +107,7 @@ const ProductListScreen = ({route, navigation}: any) => {
       const res = await brandProduct({brand: [route.params.brand_id]});
       setProducts(res.data.data);
     } catch (error) {
-      console.log(error);
+      ToastAndroid.show('Error Get Products', ToastAndroid.SHORT);
     }
   }, [route.params]);
 
@@ -62,6 +116,39 @@ const ProductListScreen = ({route, navigation}: any) => {
     setProducts(res.data.data);
   }, [route.params]);
 
+  const applyFilter = useCallback(async () => {
+    setModalVisible(false);
+    try {
+      const res = await filterProduct(
+        {brand: selectedBrand},
+        {category: selectedCategory},
+      );
+      setProducts(res.data.data);
+    } catch (error) {}
+  }, [selectedBrand, selectedCategory]);
+
+  const handleSelectedBrand = useCallback(
+    (value: string) => {
+      if (selectedBrand.includes(value)) {
+        setSelectedBrand([...selectedBrand.filter((e) => e !== value)]);
+      } else {
+        setSelectedBrand([...selectedBrand, value]);
+      }
+    },
+    [selectedBrand],
+  );
+
+  const handleSelectedCategory = useCallback(
+    (value: string) => {
+      if (selectedCategory.includes(value)) {
+        setSelectedCategory([...selectedCategory.filter((e) => e !== value)]);
+      } else {
+        setSelectedCategory([...selectedCategory, value]);
+      }
+    },
+    [selectedCategory],
+  );
+
   return (
     <View flex-1 backgroundColor={Colors.white}>
       <RightDrawer
@@ -69,13 +156,20 @@ const ProductListScreen = ({route, navigation}: any) => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         setPriceFilter={setPriceFilter}
+        brands={optionBrands}
+        categories={optionCategory}
+        handleSelectedCategory={handleSelectedCategory}
+        handleSelectedBrand={handleSelectedBrand}
+        selectedBrand={selectedBrand}
+        selectedCategory={selectedCategory}
+        applyFilter={applyFilter}
       />
       <FlatList
         ListHeaderComponent={
           <View
             paddingT-10
             style={{borderBottomWidth: 1, borderBottomColor: Colors.grey50}}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View paddingH-20 paddingV-10>
                 <Text
                   onPress={() => setModalVisible(true)}
@@ -122,13 +216,14 @@ const ProductListScreen = ({route, navigation}: any) => {
                   Sofa Cum Bed
                 </Text>
               </View>
-            </ScrollView>
+            </ScrollView> */}
           </View>
         }
         data={products}
         renderItem={(item) => <ProductItem {...item.item} />}
         numColumns={2}
         keyExtractor={(item, index) => index.toString()}
+        ListEmptyComponent={() => <EmptyProduct />}
       />
     </View>
   );

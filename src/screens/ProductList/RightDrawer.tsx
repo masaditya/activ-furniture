@@ -21,39 +21,21 @@ type RightDrawerProps = {
   setModalVisible: (visible: boolean) => void;
   priceFilter: {min: number; max: number};
   setPriceFilter: (slideValue: {min: number; max: number}) => void;
+  brands: any[];
+  categories: any[];
+  handleFilterBrand?: (brand_id: string) => void;
+  handleFilterCategory?: (category_id: string) => void;
+  handleSelectedCategory: (id: string) => void;
+  handleSelectedBrand: (id: string) => void;
+  selectedBrand: string[];
+  selectedCategory: string[];
+  applyFilter: () => void;
 };
 
 const RightDrawer = (props: RightDrawerProps) => {
-  const [selectedBrand, setSelectedBrand] = useState(['Camora']);
-  const [selectedMaterial, setSelectedMaterial] = useState([
-    'Sheenam Wood',
-    'Metal',
-  ]);
-  const handleSelectedBrand = useCallback(
-    (value: string) => {
-      if (selectedBrand.includes(value)) {
-        setSelectedBrand([...selectedBrand.filter((e) => e !== value)]);
-      } else {
-        setSelectedBrand([...selectedBrand, value]);
-      }
-    },
-    [selectedBrand],
-  );
-
-  const handleSelectedMaterial = useCallback(
-    (value: string) => {
-      if (selectedMaterial.includes(value)) {
-        setSelectedMaterial([...selectedMaterial.filter((e) => e !== value)]);
-      } else {
-        setSelectedMaterial([...selectedMaterial, value]);
-      }
-    },
-    [selectedMaterial],
-  );
-
   const handleResetFilter = useCallback(() => {
-    setSelectedBrand([]);
-    setSelectedMaterial([]);
+    // props.setSelectedBrand([]);
+    // setSelectedMaterial([]);
   }, []);
 
   return (
@@ -84,29 +66,7 @@ const RightDrawer = (props: RightDrawerProps) => {
               size={RFValue(20)}
             />
           </View>
-          <View
-            padding-20
-            style={{borderBottomWidth: 1, borderBottomColor: Colors.grey50}}>
-            <Text font16bold>Price</Text>
-            <View center>
-              <MultiSlider
-                onValuesChangeFinish={(e) =>
-                  props.setPriceFilter({
-                    min: e[0],
-                    max: e[1],
-                  })
-                }
-                min={100}
-                max={200}
-                values={[100, 200]}
-                sliderLength={RFValue(240)}
-              />
-            </View>
-            <View row spread>
-              <Text> $ {props.priceFilter.min} </Text>
-              <Text> $ {props.priceFilter.max} </Text>
-            </View>
-          </View>
+
           <View
             padding-20
             style={{borderBottomWidth: 1, borderBottomColor: Colors.grey50}}>
@@ -117,7 +77,17 @@ const RightDrawer = (props: RightDrawerProps) => {
                 flexWrap: 'wrap',
                 flexDirection: 'row',
               }}>
-              <TagLabel
+              {props.brands.map((item, key) => {
+                return (
+                  <TagLabel
+                    key={key}
+                    value={item.brand_name}
+                    isActive={props.selectedBrand.includes(item.brand_id)}
+                    onPress={() => props.handleSelectedBrand(item.brand_id)}
+                  />
+                );
+              })}
+              {/* <TagLabel
                 value="Camora"
                 isActive={selectedBrand.includes('Camora')}
                 onPress={() => handleSelectedBrand('Camora')}
@@ -136,20 +106,32 @@ const RightDrawer = (props: RightDrawerProps) => {
                 value="Woodorld"
                 isActive={selectedBrand.includes('Woodorld')}
                 onPress={() => handleSelectedBrand('Woodorld')}
-              />
+              /> */}
             </View>
           </View>
           <View
             padding-20
             style={{borderBottomWidth: 1, borderBottomColor: Colors.grey50}}>
-            <Text font16bold>Material</Text>
+            <Text font16bold>Category</Text>
             <View
               style={{
                 display: 'flex',
                 flexWrap: 'wrap',
                 flexDirection: 'row',
               }}>
-              <TagLabel
+              {props.categories.map((item, key) => {
+                return (
+                  <TagLabel
+                    key={key}
+                    value={item.category_name}
+                    isActive={props.selectedCategory.includes(item.category_id)}
+                    onPress={() =>
+                      props.handleSelectedCategory(item.category_id)
+                    }
+                  />
+                );
+              })}
+              {/* <TagLabel
                 value="Sheenam Wood"
                 isActive={selectedMaterial.includes('Sheenam Wood')}
                 onPress={() => handleSelectedMaterial('Sheenam Wood')}
@@ -168,12 +150,12 @@ const RightDrawer = (props: RightDrawerProps) => {
                 value="MDF"
                 isActive={selectedMaterial.includes('MDF')}
                 onPress={() => handleSelectedMaterial('MDF')}
-              />
+              /> */}
             </View>
           </View>
         </ScrollView>
         <Button
-          onPress={() => props.setModalVisible(false)}
+          onPress={() => props.applyFilter()}
           fullWidth
           backgroundColor={color.primary}>
           <Text white>Apply</Text>

@@ -16,19 +16,12 @@ const RootNavigation = () => {
   const {getUsername} = useAuthService();
 
   React.useEffect(() => {
-    getGlobal();
 
     getUsername().then((res) => {
-      console.log(res);
       dispatch(res);
     });
-    // console.log(globalState);
   }, []);
 
-  const getGlobal = useCallback(async () => {
-    let a = await globalState;
-    console.log(a);
-  }, []);
 
   return (
     <NavigationContainer>

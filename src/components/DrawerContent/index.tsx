@@ -1,4 +1,4 @@
-import React, {useCallback, useContext} from 'react';
+import React, {useCallback, useContext, useEffect} from 'react';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {View, Text, Image} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -15,9 +15,13 @@ import {useAuthService} from '../../hook/services';
 import {RootContext} from '../../context';
 import {LOGOUT_SUCCESS} from '../../context/actionTypes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import UserAvatar from './UserAvatar';
 
 const CustomDrawerContent = (props: any) => {
   // @ts-ignore
+
+  // const {globalState, dispatch} = useContext(RootContext);
+
   // const {dispatch} = useContext(RootContext);
   // const {logoutUser} = useAuthService();
 
@@ -28,13 +32,16 @@ const CustomDrawerContent = (props: any) => {
   //       dispatch({type: LOGOUT_SUCCESS});
   //     }
   //   } catch (error) {
-  //     console.log(error);
   //   }
+  // }, []);
+  // useEffect(() => {
+  //   // console.log(globalState);
+  //   return () => {};
   // }, []);
 
   return (
     <DrawerContentScrollView {...props}>
-      <View row centerV paddingV-40 paddingH-20>
+      {/* <View row centerV paddingV-40 paddingH-20>
         <Image
           style={{
             width: 70,
@@ -56,7 +63,8 @@ const CustomDrawerContent = (props: any) => {
             View Profile
           </Text>
         </View>
-      </View>
+      </View> */}
+      <UserAvatar />
       <View paddingH-20>
         <View row paddingV-15 centerV>
           <Icon name="home" size={RFValue(20)} color={color.primary} />

@@ -8,8 +8,8 @@ import {
 } from 'react-native-gesture-handler';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {View, Text, Colors, Button as UIBtn} from 'react-native-ui-lib';
-import {Image} from 'react-native-ui-lib';
+import {View, Text, Colors, Button as UIBtn, Image} from 'react-native-ui-lib';
+// import {Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../components/Color';
 import ProductItem from '../../components/ProductItem';
@@ -26,42 +26,35 @@ export default function DetailsScreen(props: any) {
 
   useEffect(() => {
     getDetail();
+
     return () => {};
-  }, []);
+  }, [props.route]);
 
   const getDetail = useCallback(async () => {
     try {
       const res = await getDetailProduct(props.route.params.product.id);
       if (res) {
+        // console.log('DETAIL DATA : ', res.data.data[0]);
         setProductDetail(res.data.data[0]);
       }
     } catch (error) {}
-  }, []);
+  }, [props.route.params]);
 
   return (
     <View flex-1 backgroundColor={Colors.white}>
       <ViewPager>
-        <Image
-          style={{width: RFPercentage(100), height: RFValue(200)}}
-          source={{
-            uri:
-              'https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-          }}
-        />
-        <Image
-          style={{width: RFPercentage(100), height: RFValue(200)}}
-          source={{
-            uri:
-              'https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-          }}
-        />
-        <Image
-          style={{width: RFPercentage(100), height: RFValue(200)}}
-          source={{
-            uri:
-              'https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-          }}
-        />
+        {productDetail.image &&
+          productDetail.image.map((item: string, i: number) => {
+            return (
+              <Image
+                key={i}
+                style={{width: RFPercentage(100), height: RFValue(200)}}
+                source={{
+                  uri: item,
+                }}
+              />
+            );
+          })}
       </ViewPager>
 
       <View backgroundColor={Colors.white} padding-15>
@@ -83,50 +76,35 @@ export default function DetailsScreen(props: any) {
           <View flex-1 backgroundColor={Colors.white} padding-20>
             <ScrollView showsVerticalScrollIndicator={false}>
               <Text>{productDetail.post_content}</Text>
-              <View row paddingV-10>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: Colors.grey40,
-                    padding: 10,
-                    marginHorizontal: 5,
-                  }}
-                />
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: Colors.orange10,
-                    padding: 10,
-                    marginHorizontal: 5,
-                  }}
-                />
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: Colors.green10,
-                    padding: 10,
-                    marginHorizontal: 5,
-                  }}
-                />
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: Colors.yellow10,
-                    padding: 10,
-                    marginHorizontal: 5,
-                  }}
-                />
-              </View>
+
               <View paddingV-20>
                 <DescriptionInfo field="Brand" value={productDetail.brand} />
                 <DescriptionInfo
                   field="Dimension (in)"
                   value={productDetail.dimension}
                 />
-                <DescriptionInfo field="Colour" value="Honey Oak" />
-                <DescriptionInfo field="Room Type" value="Bedroom" />
-                <DescriptionInfo field="Collection" value="Vayaka" />
-                <DescriptionInfo field="Seating Height" value="13" />
-                <DescriptionInfo
-                  field="Primary Material"
-                  value="Sheesham Wood"
-                />
+                <View row flex-2 centerV>
+                  <View flex-1>
+                    <Text grey40>Color</Text>
+                  </View>
+                  <View flex-1>
+                    {productDetail.color &&
+                      productDetail.color.map((color: any, i: number) => {
+                        return (
+                          <View row key={i} centerV>
+                            <Text>{color.value}</Text>
+                            <Image
+                              marginL-10
+                              style={{width: RFValue(50), height: RFValue(50)}}
+                              source={{
+                                uri: color.photo,
+                              }}
+                            />
+                          </View>
+                        );
+                      })}
+                  </View>
+                </View>
               </View>
             </ScrollView>
           </View>

@@ -18,8 +18,8 @@ import ProductItem from '../../components/ProductItem';
 import {productList} from '../../mock/data';
 // import RightDrawer from './RightDrawer';
 
-const CategoryListScreen = ({route, navigation}:any) => {
-//   const navigation = useNavigation();
+const CategoryListScreen = ({route, navigation}: any) => {
+  //   const navigation = useNavigation();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [modalVisible, setModalVisible] = useState(false);
   const [priceFilter, setPriceFilter] = useState<{min: number; max: number}>({
@@ -28,14 +28,13 @@ const CategoryListScreen = ({route, navigation}:any) => {
   });
   const [categoryList, setcategoryList] = useState([]);
 
-
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <View paddingH-10>
-          <Text font14bold onPress={() => setModalVisible(true)}>
+          {/* <Text font14bold onPress={() => setModalVisible(true)}>
             Filter
-          </Text>
+          </Text> */}
         </View>
       ),
     });
@@ -54,8 +53,10 @@ const CategoryListScreen = ({route, navigation}:any) => {
         ListHeaderComponent={
           <View
             paddingT-10
-            style={{borderBottomWidth: 1, borderBottomColor: Colors.grey50}}>
-          </View>
+            style={{
+              borderBottomWidth: 1,
+              borderBottomColor: Colors.grey50,
+            }}></View>
         }
         data={categoryList}
         renderItem={(item) => <CategoryItem {...item.item} />}

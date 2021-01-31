@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
 import Markdown from 'react-native-markdown-display';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
@@ -9,15 +9,16 @@ import {useBlogService} from '../../hook/services';
 
 const ReadBlogScreen = ({route, navigation}: any) => {
   const {readBlog} = useBlogService();
+  const [blogContent, setBlogContent] = useState<any>({});
   useEffect(() => {
     getBlogContent();
     return () => {};
-  }, []);
+  }, [route]);
 
   const getBlogContent = useCallback(async () => {
     try {
       const res = await readBlog(route.params.id);
-      console.log(res.data);
+      setBlogContent(res.data.data[0]);
     } catch (error) {
       console.log(error);
     }
@@ -33,8 +34,7 @@ const ReadBlogScreen = ({route, navigation}: any) => {
             borderBottomLeftRadius: RFValue(30),
           }}
           source={{
-            uri:
-              'https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+            uri: blogContent.imgurl,
           }}
         />
         <View
@@ -44,20 +44,19 @@ const ReadBlogScreen = ({route, navigation}: any) => {
             borderTopRightRadius: RFValue(30),
             borderBottomLeftRadius: RFValue(30),
           }}>
-          <Text font18bold>
-            Lorem ipsum dolor Magni maxime asperiores totam voluptatum
-            blanditiis!
-          </Text>
+          <Text font18bold>{blogContent.post_title}</Text>
           <Text color={color.primary} font14bold>
-            REVIEW
+            {blogContent.post_type &&
+              blogContent.post_type.toString().toUpperCase()}
           </Text>
           <View row spread marginT-20>
             <Text font12 grey30>
               <Icon name="person" />
-              Admin
+              {blogContent.author}
             </Text>
             <Text font12 grey30>
-              <Icon name="timer" />4 Min
+              <Icon name="timer" />
+              {blogContent.publish_date}
             </Text>
           </View>
         </View>

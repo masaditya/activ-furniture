@@ -1,7 +1,11 @@
 import React from 'react';
 import {View, Text} from 'react-native-ui-lib';
 
-const DescriptionInfo = (props: {field: string; value: string}) => {
+const DescriptionInfo = (props: {
+  field: string;
+  value: string;
+  type?: 'text' | 'image';
+}) => {
   return (
     <View row flex-2>
       <View flex-1>

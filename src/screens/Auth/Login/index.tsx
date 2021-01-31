@@ -20,7 +20,6 @@ const LoginScreen = ({navigation}: any) => {
 
   // const checkUserdata = useCallback(async () => {
   //   const userdata = await getUsername();
-  //   console.log('userdata', userdata);
   //   return userdata === null ? true : false;
   // }, []);
 
@@ -28,16 +27,12 @@ const LoginScreen = ({navigation}: any) => {
     try {
       const res = await loginUser(username, password);
       if (res.data.status === 'sukses') {
-        console.log(res.data.data[0]);
         storeUsername(res.data.data[0]).then((result) => {
-          console.log(result);
           dispatch(result);
         });
       } else {
-        console.log(res.data);
       }
     } catch (error) {
-      console.log(error);
     }
   }, [username, password]);
 

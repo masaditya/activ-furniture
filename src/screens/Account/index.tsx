@@ -13,18 +13,19 @@ import {LOGOUT_SUCCESS} from '../../context/actionTypes';
 const AccountScreen = ({navigation}: any) => {
   const {getUsername, getUserInfo, logoutUser} = useAuthService();
   // @ts-ignore
-  const {dispatch} = useContext(RootContext);
+  const {globalState, dispatch} = useContext(RootContext);
   useEffect(() => {
     getInfo();
     return () => {};
   }, []);
 
   const getInfo = useCallback(async () => {
-    const info: any = await getUsername();
-    // console.log(info.payload.user.username);
-    const username = info.payload.user.username;
-    const res = await getUserInfo(username);
-    console.log(res);
+    // const info: any = await getUsername();
+    // const username = info.payload.user.username;
+    if (globalState.user) {
+      const res = await getUserInfo(globalState.user.username);
+      console.log(res);
+    }
   }, []);
   return (
     <View backgroundColor={Colors.white} flex-1 paddingV-20>
@@ -47,7 +48,10 @@ const AccountScreen = ({navigation}: any) => {
                 width: RFPercentage(30),
               }}
               label="Enter Full Name"
-              value="Albus Dumbledore"
+              value={
+                globalState.user &&
+                globalState.user.first_name + ' ' + globalState.user.last_name
+              }
             />
           </View>
           <View paddingT-20>
@@ -55,15 +59,17 @@ const AccountScreen = ({navigation}: any) => {
               label="Email Address"
               status="basic"
               focusable
-              value="admin@wahana.com"
+              value={globalState.user && globalState.user.email}
+              disabled
             />
           </View>
           <View paddingT-20>
             <Input
+              disabled
               keyboardType="number-pad"
               label="Phone Number"
               status="basic"
-              value="+62 85236846025"
+              value={globalState.user && globalState.user.phone}
             />
           </View>
           <Button marginT-30 fullWidth backgroundColor={color.primary}>
@@ -89,7 +95,7 @@ const AccountScreen = ({navigation}: any) => {
         </View> */}
         {/* <RadioGroup
           initialValue="home"
-          onValueChange={(e: any) => console.log(e)}>
+          >
           <View
             row
             spread

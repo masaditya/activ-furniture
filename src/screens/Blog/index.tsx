@@ -17,10 +17,8 @@ const BlogScreen = ({route, navigation}: any) => {
   const getBlogs = useCallback(async () => {
     try {
       const res = await getListBlog()
-      console.log(res.data.data)
       setBlogs(res.data.data)
     } catch (error) {
-      console.log(error)
     }
   }, []);
 

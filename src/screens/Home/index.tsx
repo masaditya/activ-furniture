@@ -1,21 +1,18 @@
-import {
-  CompositeNavigationProp,
-  NavigationAction,
-  NavigationProp,
-  useNavigation,
-} from '@react-navigation/native';
 import {Input, ViewPager} from '@ui-kitten/components';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Dimensions, FlatList, ImageBackground} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  ImageBackground,
+  ToastAndroid,
+} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {View, Text, Button, Image, Colors} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../components/Color';
 import ProductItem from '../../components/ProductItem';
 import {useBrandService, useProductService} from '../../hook/services';
-import {brandList, categoryList, productList} from '../../mock/data';
 import {
   ACCOUNT_SCREEN,
   BRAND_LIST_SCREEN,
@@ -60,7 +57,7 @@ export default function HomeScreen({navigation}: any) {
         setHomeProduct([...res.data.data]);
       }
     } catch (error) {
-      console.log(error);
+      ToastAndroid.show('Error Get Product', ToastAndroid.SHORT);
     }
   }, []);
 
@@ -70,27 +67,31 @@ export default function HomeScreen({navigation}: any) {
       if (banner) {
         setBanner(banner.data.data);
       }
-    } catch (error) {}
+    } catch (error) {
+      ToastAndroid.show('Error Get Banner', ToastAndroid.SHORT);
+    }
   }, []);
 
   const getBrands = useCallback(async () => {
     try {
       const brand = await getAllBrand();
       if (brand) {
-        // console.log(brand.data);
         setHomeBrand(brand.data.data);
       }
-    } catch (error) {}
+    } catch (error) {
+      ToastAndroid.show('Error Get Brands', ToastAndroid.SHORT);
+    }
   }, []);
 
   const getCategories = useCallback(async () => {
     try {
       const category = await getAllCategory();
       if (category) {
-        console.log(category.data);
         setHomeCategory(category.data.data);
       }
-    } catch (error) {}
+    } catch (error) {
+      ToastAndroid.show('Error Get Categories', ToastAndroid.SHORT);
+    }
   }, []);
 
   return (
@@ -99,7 +100,7 @@ export default function HomeScreen({navigation}: any) {
         <>
           <View style={{backgroundColor: Colors.white}}>
             <ViewPager>
-              {banner.map((item : any, key) => {
+              {banner.map((item: any, key) => {
                 return (
                   <Image
                     key={key}
@@ -136,7 +137,7 @@ export default function HomeScreen({navigation}: any) {
                 </Text>
               </View>
               <ScrollView showsHorizontalScrollIndicator={false} horizontal>
-                {homeBrand.map((item : any, i) => {
+                {homeBrand.map((item: any, i) => {
                   return (
                     <View padding-10 key={i}>
                       <TouchableOpacity
@@ -175,7 +176,7 @@ export default function HomeScreen({navigation}: any) {
                 </Text>
               </View>
               <ScrollView showsHorizontalScrollIndicator={false} horizontal>
-                {homeCategory.map((item : any, i) => {
+                {homeCategory.map((item: any, i) => {
                   return (
                     <View padding-10 key={i}>
                       <TouchableOpacity

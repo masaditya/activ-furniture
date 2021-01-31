@@ -1,12 +1,10 @@
 import React from 'react';
-import MainNavigation from './src/navigation/MainNavigation';
 
 import {ThemeManager, Colors, Typography} from 'react-native-ui-lib';
 import {RFValue} from 'react-native-responsive-fontsize';
 import color from './src/components/Color';
 import * as eva from '@eva-design/eva';
 import {ApplicationProvider} from '@ui-kitten/components';
-import {useAuthService} from './src/hook/services';
 import {RootProvider} from './src/context';
 import RootNavigation from './src/navigation';
 
@@ -70,7 +68,6 @@ ThemeManager.setComponentForcedTheme('Text', (props: any) => {
 });
 
 function App() {
-  const {getUsername, getUserInfo, storeUsername} = useAuthService();
   return (
     <RootProvider>
       <ApplicationProvider {...eva} theme={eva.light}>

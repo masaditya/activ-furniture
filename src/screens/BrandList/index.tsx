@@ -31,9 +31,9 @@ const BrandListScreen = ({route, navigation}: any) => {
     navigation.setOptions({
       headerRight: () => (
         <View paddingH-10>
-          <Text font14bold onPress={() => setModalVisible(true)}>
+          {/* <Text font14bold onPress={() => setModalVisible(true)}>
             Filter
-          </Text>
+          </Text> */}
         </View>
       ),
     });

@@ -10,7 +10,6 @@ import {
 
 const CategoryItem = (props?: any) => {
   const {navigate} = useNavigation();
-  console.log(props)
   return (
     <View
       backgroundColor={Colors.white}
