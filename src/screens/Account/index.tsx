@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {View, Text, Colors, Image, Button} from 'react-native-ui-lib';
 import {Input} from '@ui-kitten/components';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -11,7 +11,8 @@ import {RootContext} from '../../context';
 import {LOGOUT_SUCCESS} from '../../context/actionTypes';
 
 const AccountScreen = ({navigation}: any) => {
-  const {getUsername, getUserInfo, logoutUser} = useAuthService();
+  const {getUserInfo, logoutUser} = useAuthService();
+  const [isUpdateActive, setIsUpdateActive] = useState(false);
   // @ts-ignore
   const {globalState, dispatch} = useContext(RootContext);
   useEffect(() => {
@@ -47,6 +48,7 @@ const AccountScreen = ({navigation}: any) => {
               style={{
                 width: RFPercentage(30),
               }}
+              disabled={!isUpdateActive}
               label="Enter Full Name"
               value={
                 globalState.user &&
@@ -60,21 +62,25 @@ const AccountScreen = ({navigation}: any) => {
               status="basic"
               focusable
               value={globalState.user && globalState.user.email}
-              disabled
+              disabled={!isUpdateActive}
             />
           </View>
           <View paddingT-20>
             <Input
-              disabled
+              disabled={!isUpdateActive}
               keyboardType="number-pad"
               label="Phone Number"
               status="basic"
               value={globalState.user && globalState.user.phone}
             />
           </View>
-          <Button marginT-30 fullWidth backgroundColor={color.primary}>
+          <Button
+            marginT-30
+            fullWidth
+            backgroundColor={color.primary}
+            onPress={() => setIsUpdateActive(!isUpdateActive)}>
             <Text font14 white>
-              Update Profile
+              {!isUpdateActive ? 'Update Profile' : 'Save Update'}
             </Text>
           </Button>
         </View>
