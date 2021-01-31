@@ -64,7 +64,7 @@ const PopupModal = (props: ModalProps) => {
               <Text font12 numberOfLines={2}>
                 {popUpContent.post_title}
               </Text>
-              <View row spread marginT-20>
+              {/* <View row spread marginT-20>
                 <Text font10 grey30>
                   <Icon name="person" />
                   {popUpContent.author}
@@ -73,7 +73,7 @@ const PopupModal = (props: ModalProps) => {
                   <Icon name="timer" />
                   {popUpContent.publish_date}
                 </Text>
-              </View>
+              </View> */}
             </View>
           </View>
         </ImageBackground>
