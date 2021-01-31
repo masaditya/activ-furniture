@@ -26,6 +26,7 @@ const ProductListScreen = ({route, navigation}: any) => {
     brandProduct,
     categoryProduct,
     filterProduct,
+    searchProduct,
   } = useBrandService();
 
   const {getAllProduct} = useProductService();
@@ -55,14 +56,15 @@ const ProductListScreen = ({route, navigation}: any) => {
     });
     getBrands();
     getCategories();
-    ToastAndroid.show('Init', ToastAndroid.SHORT);
   }, [route]);
 
   useEffect(() => {
     if (route.params) {
+      console.log(route.params);
       let type = Object.keys(route.params);
       if (type[0] === 'brand_id') getProductByBrand();
-      else getProductByCategory();
+      if (type[0] === 'category_id') getProductByCategory();
+      if (type[0] === 'keyword') getProductByKeyword();
     } else {
       getAllProducts();
     }
@@ -93,7 +95,6 @@ const ProductListScreen = ({route, navigation}: any) => {
   }, []);
 
   const getAllProducts = useCallback(async () => {
-    ToastAndroid.show('Get Products', ToastAndroid.SHORT);
     try {
       const res = await getAllProduct();
       setProducts(res.data.data);
@@ -105,6 +106,15 @@ const ProductListScreen = ({route, navigation}: any) => {
   const getProductByBrand = useCallback(async () => {
     try {
       const res = await brandProduct({brand: [route.params.brand_id]});
+      setProducts(res.data.data);
+    } catch (error) {
+      ToastAndroid.show('Error Get Products', ToastAndroid.SHORT);
+    }
+  }, [route.params]);
+
+  const getProductByKeyword = useCallback(async () => {
+    try {
+      const res = await searchProduct(route.params.keyword);
       setProducts(res.data.data);
     } catch (error) {
       ToastAndroid.show('Error Get Products', ToastAndroid.SHORT);
@@ -149,6 +159,14 @@ const ProductListScreen = ({route, navigation}: any) => {
     [selectedCategory],
   );
 
+  const resetFilter = useCallback(() => {
+    ToastAndroid.show('Filter Reset', ToastAndroid.SHORT);
+    setModalVisible(false);
+    setSelectedBrand([]);
+    setSelectedCategory([]);
+    getAllProducts();
+  }, []);
+
   return (
     <View flex-1 backgroundColor={Colors.white}>
       <RightDrawer
@@ -163,6 +181,7 @@ const ProductListScreen = ({route, navigation}: any) => {
         selectedBrand={selectedBrand}
         selectedCategory={selectedCategory}
         applyFilter={applyFilter}
+        resetFilter={resetFilter}
       />
       <FlatList
         ListHeaderComponent={

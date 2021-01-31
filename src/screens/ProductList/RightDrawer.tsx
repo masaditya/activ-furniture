@@ -30,6 +30,7 @@ type RightDrawerProps = {
   selectedBrand: string[];
   selectedCategory: string[];
   applyFilter: () => void;
+  resetFilter: () => void;
 };
 
 const RightDrawer = (props: RightDrawerProps) => {
@@ -58,7 +59,7 @@ const RightDrawer = (props: RightDrawerProps) => {
             spread
             centerV
             style={{borderBottomWidth: 1, borderBottomColor: Colors.grey50}}>
-            <Text onPress={handleResetFilter}>Reset</Text>
+            <Text onPress={props.resetFilter}>Reset</Text>
             <Text font20bold>Filters</Text>
             <Icon
               onPress={() => props.setModalVisible(false)}

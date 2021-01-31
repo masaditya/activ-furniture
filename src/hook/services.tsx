@@ -48,7 +48,10 @@ export const useBrandService = () => {
     });
   };
 
-  const filterProduct = async (brand: {brand: string[]},category: {category: string[]})=> {
+  const filterProduct = async (
+    brand: {brand: string[]},
+    category: {category: string[]},
+  ) => {
     const body = new URLSearchParams();
     // @ts-ignore
     body.append('category', JSON.stringify(category));
@@ -58,14 +61,26 @@ export const useBrandService = () => {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
-  }
+  };
+
+  const searchProduct = async (keyword: string) => {
+    const body = new URLSearchParams();
+    // @ts-ignore
+    body.append('keyword', keyword);
+    return await axios.post(`${baseUrl}/product/all`, body, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+  };
 
   return {
     getAllBrand,
     brandProduct,
     getAllCategory,
     categoryProduct,
-    filterProduct
+    filterProduct,
+    searchProduct
   } as const;
 };
 
@@ -85,8 +100,7 @@ export const useAuthService = () => {
   const logoutUser = async () => {
     try {
       await AsyncStorage.removeItem('user');
-    } catch (e) {
-    }
+    } catch (e) {}
     return await axios.post(`${baseUrl}/logout`);
   };
   const storeUsername = async (value: any) => {

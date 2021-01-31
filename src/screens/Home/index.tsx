@@ -27,6 +27,7 @@ export default function HomeScreen({navigation}: any) {
   const [banner, setBanner] = useState([]);
   const [homeBrand, setHomeBrand] = useState([]);
   const [homeCategory, setHomeCategory] = useState([]);
+  const [keyword, setKeyword] = useState('');
 
   const tmp = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const tmp2 = [1, 2, 3, 4];
@@ -116,6 +117,8 @@ export default function HomeScreen({navigation}: any) {
               <Input
                 placeholder="Search Product"
                 size="large"
+                status="success"
+                focusable
                 accessoryLeft={() => (
                   <Icon
                     name="search"
@@ -123,7 +126,11 @@ export default function HomeScreen({navigation}: any) {
                     color={Colors.grey40}
                   />
                 )}
-                // onChangeText={(nextValue) => setValue(nextValue)}
+                onSubmitEditing={() =>
+                  navigation.navigate(PRODUCT_LIST_SCREEN, {keyword: keyword})
+                }
+                onChangeText={(nextValue) => setKeyword(nextValue)}
+                value={keyword}
               />
               <View row paddingT-10 spread centerV>
                 <Text font14>Brand</Text>
