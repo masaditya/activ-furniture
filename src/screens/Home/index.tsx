@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native';
 import {Input, ViewPager} from '@ui-kitten/components';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
@@ -19,8 +20,9 @@ import {
   CATEGORY_LIST_SCREEN,
   PRODUCT_LIST_SCREEN,
 } from '../../navigation/routename';
+import PopupModal from './PopupModal';
 
-export default function HomeScreen({navigation}: any) {
+export default function HomeScreen({navigation, route}: any) {
   const {getAllProduct, getBanner} = useProductService();
   const {getAllBrand, getAllCategory} = useBrandService();
   const [homeProduct, setHomeProduct] = useState<any[]>([]);
@@ -28,9 +30,7 @@ export default function HomeScreen({navigation}: any) {
   const [homeBrand, setHomeBrand] = useState([]);
   const [homeCategory, setHomeCategory] = useState([]);
   const [keyword, setKeyword] = useState('');
-
-  const tmp = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const tmp2 = [1, 2, 3, 4];
+  const [popUpVisibility, setPopUpVisibility] = useState(true);
 
   useEffect(() => {
     navigation.setOptions({
@@ -50,6 +50,17 @@ export default function HomeScreen({navigation}: any) {
     getCategories();
     return () => {};
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setPopUpVisibility(true);
+
+      return () => {
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+      };
+    }, []),
+  );
 
   const getProduct = useCallback(async () => {
     try {
@@ -100,6 +111,10 @@ export default function HomeScreen({navigation}: any) {
       ListHeaderComponent={
         <>
           <View style={{backgroundColor: Colors.white}}>
+            <PopupModal
+              visible={popUpVisibility}
+              setVisible={setPopUpVisibility}
+            />
             <ViewPager>
               {banner.map((item: any, key) => {
                 return (

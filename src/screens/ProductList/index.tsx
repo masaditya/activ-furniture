@@ -60,7 +60,6 @@ const ProductListScreen = ({route, navigation}: any) => {
 
   useEffect(() => {
     if (route.params) {
-      console.log(route.params);
       let type = Object.keys(route.params);
       if (type[0] === 'brand_id') getProductByBrand();
       if (type[0] === 'category_id') getProductByCategory();

@@ -12,13 +12,15 @@ export const useProductService = () => {
   const filterProductCategory = async (category: {category: string[]}) =>
     await axios.post(`${baseUrl}/product/all`, category);
   const getBanner = async () => axios.get(`${baseUrl}/banner`);
-
+  const getPopup = async () => axios.get(`${baseUrl}/popup`);
+  
   return {
     getAllProduct,
     getDetailProduct,
     filterProductBrand,
     filterProductCategory,
     getBanner,
+    getPopup,
   } as const;
 };
 
@@ -80,7 +82,7 @@ export const useBrandService = () => {
     getAllCategory,
     categoryProduct,
     filterProduct,
-    searchProduct
+    searchProduct,
   } as const;
 };
 
