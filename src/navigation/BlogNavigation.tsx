@@ -9,7 +9,7 @@ import {DETAIL_PRODUCT_SCREEN, READ_BLOG_SCREEN} from './routename';
 
 const Stack = createStackNavigator();
 
-const ProductNavigation = () => {
+const BlogNavigation = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -29,12 +29,11 @@ const ProductNavigation = () => {
           headerTitle: '',
           headerTransparent: true,
         })}
-        name={DETAIL_PRODUCT_SCREEN}
-        component={DetailsScreen}
+        name={READ_BLOG_SCREEN}
+        component={ReadBlogScreen}
       />
-      
     </Stack.Navigator>
   );
 };
 
-export default ProductNavigation;
+export default BlogNavigation;

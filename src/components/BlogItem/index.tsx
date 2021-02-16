@@ -46,7 +46,7 @@ const BlogItem = (props: any) => {
           <View flex-2 bottom margin-5>
             <Button
               onPress={() =>
-                navigation.navigate('Product', {screen: READ_BLOG_SCREEN, params : {id : props.id}})
+                navigation.navigate('Blog', {screen: READ_BLOG_SCREEN, params : {id : props.id}})
               }
               backgroundColor={color.primary}>
               <Text white>Read More</Text>

@@ -5,7 +5,7 @@ import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {Image, View, Modal, Button, Text, Colors} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../components/Color';
-import {useBlogService} from '../../hook/services';
+import {useBlogService, useProductService} from '../../hook/services';
 import {READ_BLOG_SCREEN} from '../../navigation/routename';
 
 type ModalProps = {
@@ -15,19 +15,27 @@ type ModalProps = {
 
 const PopupModal = (props: ModalProps) => {
   const navigation = useNavigation();
-  const {getListBlog} = useBlogService();
+  const {getPopup} = useProductService();
   const [popUpContent, setPopUpContent] = useState<any>({});
 
   React.useEffect(() => {
     getFirstBlog();
+
+    return () => {
+      props.setVisible(false);
+    };
   }, []);
 
   const getFirstBlog = React.useCallback(async () => {
     try {
-      const res = await getListBlog();
+      const res = await getPopup();
 
-      console.log(res.data.data[0]);
-      setPopUpContent(res.data.data[0]);
+      console.log(res.data.data.length);
+      if (res.data.data.length > 0) {
+        setPopUpContent(res.data.data[0]);
+        props.setVisible(true);
+        console.log(res.data.data);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -43,7 +51,7 @@ const PopupModal = (props: ModalProps) => {
       <View flex centerV padding-20>
         <ImageBackground
           source={{
-            uri: popUpContent.imgurl,
+            uri: popUpContent.featured_image,
           }}
           imageStyle={{borderRadius: RFValue(10)}}
           style={{
@@ -58,12 +66,12 @@ const PopupModal = (props: ModalProps) => {
               flex-3
               style={{borderRadius: RFValue(5)}}>
               <Text color={color.primary} font14bold>
-                {popUpContent.post_type &&
-                  popUpContent.post_type.toString().toUpperCase()}
+                {popUpContent.slider_description &&
+                  popUpContent.slider_description}
               </Text>
-              <Text font12 numberOfLines={2}>
+              {/* <Text font12 numberOfLines={2}>
                 {popUpContent.post_title}
-              </Text>
+              </Text> */}
               {/* <View row spread marginT-20>
                 <Text font10 grey30>
                   <Icon name="person" />
@@ -80,9 +88,9 @@ const PopupModal = (props: ModalProps) => {
         <Button
           marginT-20
           onPress={() =>
-            navigation.navigate('Product', {
+            navigation.navigate('Blog', {
               screen: READ_BLOG_SCREEN,
-              params: {id: popUpContent.id},
+              params: {id: popUpContent.post_id},
             })
           }
           backgroundColor={color.primary}>

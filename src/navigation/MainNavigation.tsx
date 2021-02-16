@@ -29,6 +29,7 @@ import BlogScreen from '../screens/Blog';
 import CustomDrawerContent from '../components/DrawerContent/index';
 import BrandListScreen from '../screens/BrandList';
 import CategoryListScreen from '../screens/CategoryList';
+import BlogNavigation from './BlogNavigation';
 
 const Drawer = createDrawerNavigator();
 
@@ -83,6 +84,7 @@ export default function MainNavigation(props: any) {
         component={DetailsScreen}
       />
       <Drawer.Screen name="Product" component={ProductNavigation} />
+      <Drawer.Screen name="Blog" component={BlogNavigation} />
       <Drawer.Screen
         options={({navigation}) => ({
           ...mainHeaderOptions,

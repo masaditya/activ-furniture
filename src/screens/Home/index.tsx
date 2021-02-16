@@ -5,6 +5,7 @@ import {
   Dimensions,
   FlatList,
   ImageBackground,
+  RefreshControl,
   ToastAndroid,
 } from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
@@ -30,7 +31,8 @@ export default function HomeScreen({navigation, route}: any) {
   const [homeBrand, setHomeBrand] = useState([]);
   const [homeCategory, setHomeCategory] = useState([]);
   const [keyword, setKeyword] = useState('');
-  const [popUpVisibility, setPopUpVisibility] = useState(true);
+  const [popUpVisibility, setPopUpVisibility] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -48,24 +50,16 @@ export default function HomeScreen({navigation, route}: any) {
     getBanners();
     getBrands();
     getCategories();
-    return () => {};
+    return () => {
+      setPopUpVisibility(false);
+    };
   }, []);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setPopUpVisibility(true);
-
-      return () => {
-        // Do something when the screen is unfocused
-        // Useful for cleanup functions
-      };
-    }, []),
-  );
 
   const getProduct = useCallback(async () => {
     try {
       const res = await getAllProduct();
       if (res) {
+        // console.log(res.data.data[0])
         setHomeProduct([...res.data.data]);
       }
     } catch (error) {
@@ -106,6 +100,17 @@ export default function HomeScreen({navigation, route}: any) {
     }
   }, []);
 
+  const onRefresh = useCallback(async () => {
+    console.log('REFRESH');
+    setRefreshing(true);
+    await getProduct();
+    await getBanners();
+    await getBrands();
+    await getCategories();
+    setRefreshing(false);
+    console.log('REFRESH DONE');
+  }, [refreshing]);
+
   return (
     <FlatList
       ListHeaderComponent={
@@ -122,7 +127,7 @@ export default function HomeScreen({navigation, route}: any) {
                     key={key}
                     style={{width: RFPercentage(100), height: RFValue(200)}}
                     source={{
-                      uri: item.featured_image,
+                      uri: item.featured_image || '',
                     }}
                   />
                 );
@@ -175,7 +180,7 @@ export default function HomeScreen({navigation, route}: any) {
                             borderRadius: RFValue(10),
                           }}
                           source={{
-                            uri: item.brand_photo,
+                            uri: item.brand_photo || '',
                           }}
                         />
                         <Text style={{padding: RFValue(5)}} font14bold>
@@ -185,7 +190,9 @@ export default function HomeScreen({navigation, route}: any) {
                     </View>
                   );
                 })}
+               
               </ScrollView>
+             
               <View row paddingT-10 spread centerV>
                 <Text font14>Categories</Text>
                 <Text
@@ -214,7 +221,7 @@ export default function HomeScreen({navigation, route}: any) {
                             borderRadius: RFValue(10),
                           }}
                           source={{
-                            uri: item.category_photo,
+                            uri: item.category_photo || '',
                           }}
                         />
                         <Text style={{padding: RFValue(5)}} font14bold>
@@ -251,6 +258,9 @@ export default function HomeScreen({navigation, route}: any) {
         return <ProductItem {...item.item} />;
       }}
       numColumns={2}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       keyExtractor={(item, index) => index.toString()}></FlatList>
   );
 }

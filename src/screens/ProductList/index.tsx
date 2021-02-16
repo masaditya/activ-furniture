@@ -1,6 +1,12 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Dimensions, FlatList, ToastAndroid} from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  RefreshControl,
+  ToastAndroid,
+} from 'react-native';
 import {ScrollView, TouchableHighlight} from 'react-native-gesture-handler';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {
@@ -43,6 +49,8 @@ const ProductListScreen = ({route, navigation}: any) => {
     min: 100,
     max: 200,
   });
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     navigation.setOptions({
@@ -67,7 +75,9 @@ const ProductListScreen = ({route, navigation}: any) => {
     } else {
       getAllProducts();
     }
-    return () => {};
+    return () => {
+      setLoading(true);
+    };
   }, [route.params]);
 
   const getBrands = useCallback(async () => {
@@ -75,6 +85,7 @@ const ProductListScreen = ({route, navigation}: any) => {
       const brand = await getAllBrand();
       if (brand) {
         setOptionBrands(brand.data.data);
+        setLoading(false);
       }
     } catch (error) {
       ToastAndroid.show('Error Get Brands', ToastAndroid.SHORT);
@@ -87,6 +98,7 @@ const ProductListScreen = ({route, navigation}: any) => {
 
       if (category) {
         setOptionCategory(category.data.data);
+        setLoading(false);
       }
     } catch (error) {
       ToastAndroid.show('Error Get Categories', ToastAndroid.SHORT);
@@ -97,6 +109,7 @@ const ProductListScreen = ({route, navigation}: any) => {
     try {
       const res = await getAllProduct();
       setProducts(res.data.data);
+      setLoading(false);
     } catch (error) {
       ToastAndroid.show('Error Get Products', ToastAndroid.SHORT);
     }
@@ -106,6 +119,7 @@ const ProductListScreen = ({route, navigation}: any) => {
     try {
       const res = await brandProduct({brand: [route.params.brand_id]});
       setProducts(res.data.data);
+      setLoading(false);
     } catch (error) {
       ToastAndroid.show('Error Get Products', ToastAndroid.SHORT);
     }
@@ -115,6 +129,7 @@ const ProductListScreen = ({route, navigation}: any) => {
     try {
       const res = await searchProduct(route.params.keyword);
       setProducts(res.data.data);
+      setLoading(false);
     } catch (error) {
       ToastAndroid.show('Error Get Products', ToastAndroid.SHORT);
     }
@@ -123,6 +138,7 @@ const ProductListScreen = ({route, navigation}: any) => {
   const getProductByCategory = useCallback(async () => {
     const res = await categoryProduct({category: [route.params.category_id]});
     setProducts(res.data.data);
+    setLoading(false);
   }, [route.params]);
 
   const applyFilter = useCallback(async () => {
@@ -133,6 +149,7 @@ const ProductListScreen = ({route, navigation}: any) => {
         {category: selectedCategory},
       );
       setProducts(res.data.data);
+      setLoading(false);
     } catch (error) {}
   }, [selectedBrand, selectedCategory]);
 
@@ -166,6 +183,19 @@ const ProductListScreen = ({route, navigation}: any) => {
     getAllProducts();
   }, []);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    if (route.params) {
+      let type = Object.keys(route.params);
+      if (type[0] === 'brand_id') await getProductByBrand();
+      if (type[0] === 'category_id') await getProductByCategory();
+      if (type[0] === 'keyword') await getProductByKeyword();
+    } else {
+      await getAllProducts();
+    }
+    setRefreshing(false);
+  }, [refreshing, route.params, selectedBrand, selectedCategory]);
+
   return (
     <View flex-1 backgroundColor={Colors.white}>
       <RightDrawer
@@ -182,12 +212,13 @@ const ProductListScreen = ({route, navigation}: any) => {
         applyFilter={applyFilter}
         resetFilter={resetFilter}
       />
-      <FlatList
-        ListHeaderComponent={
-          <View
-            paddingT-10
-            style={{borderBottomWidth: 1, borderBottomColor: Colors.grey50}}>
-            {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      {!loading ? (
+        <FlatList
+          ListHeaderComponent={
+            <View
+              paddingT-10
+              style={{borderBottomWidth: 1, borderBottomColor: Colors.grey50}}>
+              {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View paddingH-20 paddingV-10>
                 <Text
                   onPress={() => setModalVisible(true)}
@@ -235,14 +266,22 @@ const ProductListScreen = ({route, navigation}: any) => {
                 </Text>
               </View>
             </ScrollView> */}
-          </View>
-        }
-        data={products}
-        renderItem={(item) => <ProductItem {...item.item} />}
-        numColumns={2}
-        keyExtractor={(item, index) => index.toString()}
-        ListEmptyComponent={() => <EmptyProduct />}
-      />
+            </View>
+          }
+          data={products}
+          renderItem={(item) => <ProductItem {...item.item} />}
+          numColumns={2}
+          keyExtractor={(item, index) => index.toString()}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          ListEmptyComponent={() => <EmptyProduct />}
+        />
+      ) : (
+        <View flex-1 centerH centerV>
+          <ActivityIndicator animating size="large" color={color.primary} />
+        </View>
+      )}
     </View>
   );
 };
