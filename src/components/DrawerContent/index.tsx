@@ -35,7 +35,6 @@ const CustomDrawerContent = (props: any) => {
   //   }
   // }, []);
   // useEffect(() => {
-  //   // console.log(globalState);
   //   return () => {};
   // }, []);
 

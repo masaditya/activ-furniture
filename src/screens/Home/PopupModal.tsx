@@ -30,14 +30,11 @@ const PopupModal = (props: ModalProps) => {
     try {
       const res = await getPopup();
 
-      console.log(res.data.data.length);
       if (res.data.data.length > 0) {
         setPopUpContent(res.data.data[0]);
         props.setVisible(true);
-        console.log(res.data.data);
       }
     } catch (error) {
-      console.log(error);
     }
   }, []);
 

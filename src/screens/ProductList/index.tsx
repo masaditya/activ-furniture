@@ -273,7 +273,11 @@ const ProductListScreen = ({route, navigation}: any) => {
           numColumns={2}
           keyExtractor={(item, index) => index.toString()}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            <RefreshControl
+              colors={[color.primary, '#FFFFFF']}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
           }
           ListEmptyComponent={() => <EmptyProduct />}
         />

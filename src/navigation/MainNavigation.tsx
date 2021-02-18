@@ -84,7 +84,6 @@ export default function MainNavigation(props: any) {
         component={DetailsScreen}
       />
       <Drawer.Screen name="Product" component={ProductNavigation} />
-      <Drawer.Screen name="Blog" component={BlogNavigation} />
       <Drawer.Screen
         options={({navigation}) => ({
           ...mainHeaderOptions,
@@ -136,6 +135,8 @@ export default function MainNavigation(props: any) {
         name={BLOG_SCREEN}
         component={BlogScreen}
       />
+      <Drawer.Screen name="Blog" component={BlogNavigation} />
+
     </Drawer.Navigator>
   );
 }

@@ -25,7 +25,6 @@ const AccountScreen = ({navigation}: any) => {
     // const username = info.payload.user.username;
     if (globalState.user) {
       const res = await getUserInfo(globalState.user.username);
-      console.log(res);
     }
   }, []);
   return (
@@ -74,7 +73,7 @@ const AccountScreen = ({navigation}: any) => {
               value={globalState.user && globalState.user.phone}
             />
           </View>
-          <Button
+          {/* <Button
             marginT-30
             fullWidth
             backgroundColor={color.primary}
@@ -82,7 +81,7 @@ const AccountScreen = ({navigation}: any) => {
             <Text font14 white>
               {!isUpdateActive ? 'Update Profile' : 'Save Update'}
             </Text>
-          </Button>
+          </Button> */}
         </View>
 
         {/* <View

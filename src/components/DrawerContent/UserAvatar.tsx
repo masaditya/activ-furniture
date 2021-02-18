@@ -11,7 +11,6 @@ const UserAvatar = () => {
   const navigation = useNavigation();
 
   React.useEffect(() => {
-    console.log(globalState.user);
     return () => {};
   }, []);
   return (

@@ -59,7 +59,6 @@ export default function HomeScreen({navigation, route}: any) {
     try {
       const res = await getAllProduct();
       if (res) {
-        // console.log(res.data.data[0])
         setHomeProduct([...res.data.data]);
       }
     } catch (error) {
@@ -101,14 +100,12 @@ export default function HomeScreen({navigation, route}: any) {
   }, []);
 
   const onRefresh = useCallback(async () => {
-    console.log('REFRESH');
     setRefreshing(true);
     await getProduct();
     await getBanners();
     await getBrands();
     await getCategories();
     setRefreshing(false);
-    console.log('REFRESH DONE');
   }, [refreshing]);
 
   return (
@@ -259,7 +256,10 @@ export default function HomeScreen({navigation, route}: any) {
       }}
       numColumns={2}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        <RefreshControl 
+        colors={[color.primary, "#FFFFFF"]}
+        
+        refreshing={refreshing} onRefresh={onRefresh} />
       }
       keyExtractor={(item, index) => index.toString()}></FlatList>
   );

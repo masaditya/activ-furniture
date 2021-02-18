@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {Button, Tab, TabView, ViewPager} from '@ui-kitten/components';
 import React, {useCallback, useEffect, useState} from 'react';
-import {ActivityIndicator, RefreshControl} from 'react-native';
+import {ActivityIndicator, Linking, RefreshControl} from 'react-native';
 import {
   FlatList,
   ScrollView,
@@ -11,11 +11,13 @@ import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {View, Text, Colors, Button as UIBtn, Image} from 'react-native-ui-lib';
 // import {Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import WebView from 'react-native-webview';
 import color from '../../components/Color';
 import ProductItem from '../../components/ProductItem';
 import {useProductService} from '../../hook/services';
 import {productList} from '../../mock/data';
 import DescriptionInfo from './DescriptionInfo';
+
 
 export default function DetailsScreen(props: any) {
   const {getDetailProduct} = useProductService();
@@ -24,6 +26,7 @@ export default function DetailsScreen(props: any) {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [videoID, setVideoID] = useState("")
 
   const tmp = [1, 2, 3, 4];
 
@@ -39,19 +42,20 @@ export default function DetailsScreen(props: any) {
     try {
       const res = await getDetailProduct(props.route.params.product.id);
       if (res) {
-        // console.log('DETAIL DATA : ', res.data.data[0]);
         setProductDetail(res.data.data[0]);
+        if(res.data.data[0].video){
+          let arr = productDetail.video.split("/")
+          setVideoID(arr[arr.length-1])
+        }
         setLoading(false);
       }
     } catch (error) {}
   }, [props.route.params]);
 
   const onRefresh = useCallback(async () => {
-    console.log('REFRESH');
     setRefreshing(true);
     await getDetail();
     setRefreshing(false);
-    console.log('REFRESH DONE');
   }, [refreshing]);
 
   return (
@@ -94,17 +98,38 @@ export default function DetailsScreen(props: any) {
               <Tab title={() => <Text color={color.primary}>Description</Text>}>
                 <View flex-1 backgroundColor={Colors.white} padding-20>
                   <ScrollView showsVerticalScrollIndicator={false}>
-                    <Text>{productDetail.post_content || ''}</Text>
+                    <Text>{productDetail.post_content || '-'}</Text>
 
                     <View paddingV-20>
                       <DescriptionInfo
                         field="Brand"
-                        value={productDetail.brand || ''}
+                        value={productDetail.brand || '-'}
                       />
                       <DescriptionInfo
                         field="Dimension (in)"
-                        value={productDetail.dimension || ''}
+                        value={productDetail.dimension || '-'}
                       />
+                      {/* <DescriptionInfo
+                        field="Product Assembly"
+                        value={productDetail.product_assembly || '-'}
+                      /> */}
+                      {productDetail.product_assembly && (
+                        <View row flex-2>
+                          <View flex-1>
+                            <Text grey40>Product Assembly</Text>
+                          </View>
+                          <View flex-1>
+                            <Text
+                              color={color.primary}
+                              font12bold
+                              onPress={() =>
+                                Linking.openURL(productDetail.product_assembly)
+                              }>
+                              Open Link
+                            </Text>
+                          </View>
+                        </View>
+                      )}
                       <View row flex-2 centerV>
                         <View flex-1>
                           <Text grey40>Color</Text>
@@ -142,10 +167,29 @@ export default function DetailsScreen(props: any) {
                   renderItem={(item) => <ProductItem {...item.item} />}
                   numColumns={2}
                   refreshControl={
-                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    <RefreshControl
+                      colors={[color.primary, '#FFFFFF']}
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
                   }
                   keyExtractor={(item, index) => index.toString()}></FlatList>
               </Tab>
+              {productDetail.video && <Tab
+                style={{backgroundColor: Colors.white, flex: 1}}
+                title={() => <Text color={color.primary}>Video</Text>}>
+                <View centerH>
+                  <WebView
+                    style={{ marginTop: 20, width: 320, height: 230 }}
+                    javaScriptEnabled={true}
+                    domStorageEnabled={true}
+                    allowsFullscreenVideo
+                    allowsInlineMediaPlayback
+                    mediaPlaybackRequiresUserAction
+                    source={{ uri: `https://www.youtube.com/embed/${videoID}` }}
+                  />
+                </View>
+              </Tab>}
             </TabView>
           </ScrollView>
         </View>

@@ -20,7 +20,6 @@ const ReadBlogScreen = ({route, navigation}: any) => {
       const res = await readBlog(route.params.id);
       setBlogContent(res.data.data[0]);
     } catch (error) {
-      console.log(error);
     }
   }, [route.params]);
 
