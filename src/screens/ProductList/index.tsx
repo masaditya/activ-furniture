@@ -22,6 +22,7 @@ import color from '../../components/Color';
 import ProductItem from '../../components/ProductItem';
 import {useBrandService, useProductService} from '../../hook/services';
 import {productList} from '../../mock/data';
+import { PRODUCT_LIST_SCREEN } from '../../navigation/routename';
 import EmptyProduct from './EmptyProduct';
 import RightDrawer from './RightDrawer';
 
@@ -64,11 +65,13 @@ const ProductListScreen = ({route, navigation}: any) => {
     });
     getBrands();
     getCategories();
-  }, [route]);
+  }, []);
 
   useEffect(() => {
+    console.log(route.params)
     if (route.params) {
       let type = Object.keys(route.params);
+      // console.log(route.params);
       if (type[0] === 'brand_id') getProductByBrand();
       if (type[0] === 'category_id') getProductByCategory();
       if (type[0] === 'keyword') getProductByKeyword();
@@ -76,6 +79,7 @@ const ProductListScreen = ({route, navigation}: any) => {
       getAllProducts();
     }
     return () => {
+     
       setLoading(true);
     };
   }, [route.params]);
@@ -136,9 +140,13 @@ const ProductListScreen = ({route, navigation}: any) => {
   }, [route.params]);
 
   const getProductByCategory = useCallback(async () => {
-    const res = await categoryProduct({category: [route.params.category_id]});
-    setProducts(res.data.data);
-    setLoading(false);
+    try {
+      const res = await categoryProduct({category: [route.params.category_id]});
+      setProducts(res.data.data);
+      setLoading(false);
+    } catch (error) {
+      ToastAndroid.show('Error Get Products', ToastAndroid.SHORT);
+    }
   }, [route.params]);
 
   const applyFilter = useCallback(async () => {
@@ -187,6 +195,7 @@ const ProductListScreen = ({route, navigation}: any) => {
     setRefreshing(true);
     if (route.params) {
       let type = Object.keys(route.params);
+      console.log(type[0]);
       if (type[0] === 'brand_id') await getProductByBrand();
       if (type[0] === 'category_id') await getProductByCategory();
       if (type[0] === 'keyword') await getProductByKeyword();

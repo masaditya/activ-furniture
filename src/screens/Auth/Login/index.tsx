@@ -6,11 +6,14 @@ import {HOME_SCREEN, REGISTER_SCREEN} from '../../../navigation/routename';
 import {Input} from '@ui-kitten/components';
 import {useAuthService} from '../../../hook/services';
 import {RootContext} from '../../../context';
+import { ActivityIndicator, ToastAndroid } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const LoginScreen = ({navigation}: any) => {
   const {loginUser, storeUsername, getUsername} = useAuthService();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false)
   // @ts-ignore
   const {dispatch} = useContext(RootContext);
   // useEffect(() => {
@@ -24,16 +27,21 @@ const LoginScreen = ({navigation}: any) => {
   // }, []);
 
   const submitLogin = useCallback(async () => {
+    setLoading(true)
     try {
       const res = await loginUser(username, password);
+      console.log(res.data)
       if (res.data.status === 'sukses') {
         storeUsername(res.data.data[0]).then((result) => {
           dispatch(result);
         });
       } else {
+        ToastAndroid.show(res.data.message, ToastAndroid.SHORT)
       }
     } catch (error) {
     }
+    setLoading(false)
+
   }, [username, password]);
 
   return (
@@ -50,7 +58,7 @@ const LoginScreen = ({navigation}: any) => {
           <View paddingV-20>
             <View paddingB-20>
               <Input
-                label="Email or Phone Number"
+                label="Username"
                 status="success"
                 focusable
                 value={username}
@@ -75,7 +83,8 @@ const LoginScreen = ({navigation}: any) => {
           backgroundColor={color.primary}
           flex-1
           fullWidth>
-          <Text font16 color={Colors.white}>
+          { loading && <ActivityIndicator style={{paddingHorizontal:RFValue(10)}} size="small" color="#ffffff"/>}
+          <Text  font16 color={Colors.white}>
             Signin
           </Text>
         </Button>

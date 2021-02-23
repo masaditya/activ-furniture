@@ -1,6 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native';
 import {Input, ViewPager} from '@ui-kitten/components';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -22,6 +22,8 @@ import {
   PRODUCT_LIST_SCREEN,
 } from '../../navigation/routename';
 import PopupModal from './PopupModal';
+import { CommonActions } from '@react-navigation/native';
+
 
 export default function HomeScreen({navigation, route}: any) {
   const {getAllProduct, getBanner} = useProductService();
@@ -33,6 +35,7 @@ export default function HomeScreen({navigation, route}: any) {
   const [keyword, setKeyword] = useState('');
   const [popUpVisibility, setPopUpVisibility] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState(false);
+ 
 
   useEffect(() => {
     navigation.setOptions({
@@ -45,11 +48,24 @@ export default function HomeScreen({navigation, route}: any) {
         />
       ),
     });
+    
 
     getProduct();
     getBanners();
     getBrands();
     getCategories();
+
+    // navigation.dispatch(
+    //   CommonActions.reset({
+    //     index: 1,
+    //     routes: [
+    //       {
+    //         name: PRODUCT_LIST_SCREEN,
+    //         params: { },
+    //       },
+    //     ],
+    //   })
+    // );
     return () => {
       setPopUpVisibility(false);
     };

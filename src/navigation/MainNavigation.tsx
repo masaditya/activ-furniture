@@ -50,7 +50,7 @@ export default function MainNavigation(props: any) {
     <Drawer.Navigator
       drawerContent={CustomDrawerContent}
       initialRouteName={HOME_SCREEN}>
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name={REGISTER_SCREEN}
         component={RegisterScreen}
         options={({navigation}) => ({
@@ -62,7 +62,7 @@ export default function MainNavigation(props: any) {
             <HeaderBackButton onPress={() => navigation.goBack()} />
           ),
         })}
-      />
+      /> */}
       <Drawer.Screen
         options={mainHeaderOptions}
         name={HOME_SCREEN}

@@ -18,7 +18,6 @@ import {useProductService} from '../../hook/services';
 import {productList} from '../../mock/data';
 import DescriptionInfo from './DescriptionInfo';
 
-
 export default function DetailsScreen(props: any) {
   const {getDetailProduct} = useProductService();
   const [productDetail, setProductDetail] = useState<any>({});
@@ -26,7 +25,7 @@ export default function DetailsScreen(props: any) {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [videoID, setVideoID] = useState("")
+  const [videoID, setVideoID] = useState('');
 
   const tmp = [1, 2, 3, 4];
 
@@ -39,17 +38,19 @@ export default function DetailsScreen(props: any) {
   }, [props.route]);
 
   const getDetail = useCallback(async () => {
+    setLoading(true);
+
     try {
       const res = await getDetailProduct(props.route.params.product.id);
       if (res) {
         setProductDetail(res.data.data[0]);
-        if(res.data.data[0].video){
-          let arr = productDetail.video.split("/")
-          setVideoID(arr[arr.length-1])
+        if (res.data.data[0].video) {
+          let arr = productDetail.video.split('/');
+          setVideoID(arr[arr.length - 1]);
         }
-        setLoading(false);
       }
     } catch (error) {}
+    setLoading(false);
   }, [props.route.params]);
 
   const onRefresh = useCallback(async () => {
@@ -109,6 +110,19 @@ export default function DetailsScreen(props: any) {
                         field="Dimension (in)"
                         value={productDetail.dimension || '-'}
                       />
+                      <DescriptionInfo
+                        field="Total Volume"
+                        value={productDetail.total_volume || '-'}
+                      />
+                      <DescriptionInfo
+                        field="Gross Weight"
+                        value={productDetail.gross_weight || '-'}
+                      />
+                      <DescriptionInfo
+                        field="Series Name"
+                        value={productDetail.series_name || '-'}
+                      />
+
                       {/* <DescriptionInfo
                         field="Product Assembly"
                         value={productDetail.product_assembly || '-'}
@@ -155,6 +169,21 @@ export default function DetailsScreen(props: any) {
                             })}
                         </View>
                       </View>
+                      {productDetail.video && (
+                        <View centerH>
+                          <WebView
+                            style={{marginTop: 20, width: 320, height: 230}}
+                            javaScriptEnabled={true}
+                            domStorageEnabled={true}
+                            allowsFullscreenVideo
+                            allowsInlineMediaPlayback
+                            mediaPlaybackRequiresUserAction
+                            source={{
+                              uri: `https://www.youtube.com/embed/${videoID}`,
+                            }}
+                          />
+                        </View>
+                      )}
                     </View>
                   </ScrollView>
                 </View>
@@ -175,21 +204,6 @@ export default function DetailsScreen(props: any) {
                   }
                   keyExtractor={(item, index) => index.toString()}></FlatList>
               </Tab>
-              {productDetail.video && <Tab
-                style={{backgroundColor: Colors.white, flex: 1}}
-                title={() => <Text color={color.primary}>Video</Text>}>
-                <View centerH>
-                  <WebView
-                    style={{ marginTop: 20, width: 320, height: 230 }}
-                    javaScriptEnabled={true}
-                    domStorageEnabled={true}
-                    allowsFullscreenVideo
-                    allowsInlineMediaPlayback
-                    mediaPlaybackRequiresUserAction
-                    source={{ uri: `https://www.youtube.com/embed/${videoID}` }}
-                  />
-                </View>
-              </Tab>}
             </TabView>
           </ScrollView>
         </View>

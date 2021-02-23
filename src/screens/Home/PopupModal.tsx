@@ -1,11 +1,12 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {ImageBackground} from 'react-native';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {Image, View, Modal, Button, Text, Colors} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../components/Color';
-import {useBlogService, useProductService} from '../../hook/services';
+import { RootContext } from '../../context';
+import { useProductService} from '../../hook/services';
 import {READ_BLOG_SCREEN} from '../../navigation/routename';
 
 type ModalProps = {
@@ -17,9 +18,13 @@ const PopupModal = (props: ModalProps) => {
   const navigation = useNavigation();
   const {getPopup} = useProductService();
   const [popUpContent, setPopUpContent] = useState<any>({});
+ // @ts-ignore
+ const {globalState} = useContext(RootContext);
 
   React.useEffect(() => {
-    getFirstBlog();
+    if(!globalState.isSignout){
+      getFirstBlog();
+    }
 
     return () => {
       props.setVisible(false);
@@ -32,6 +37,7 @@ const PopupModal = (props: ModalProps) => {
 
       if (res.data.data.length > 0) {
         setPopUpContent(res.data.data[0]);
+
         props.setVisible(true);
       }
     } catch (error) {
