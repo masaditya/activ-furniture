@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
@@ -68,9 +68,9 @@ const ProductListScreen = ({route, navigation}: any) => {
   }, []);
 
   useEffect(() => {
-    console.log(route.params)
+    console.log(route.params.filter)
     if (route.params) {
-      let type = Object.keys(route.params);
+      let type = Object.keys(route.params.filter);
       // console.log(route.params);
       if (type[0] === 'brand_id') getProductByBrand();
       if (type[0] === 'category_id') getProductByCategory();
@@ -83,6 +83,19 @@ const ProductListScreen = ({route, navigation}: any) => {
       setLoading(true);
     };
   }, [route.params]);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     // Do something when the screen is focused
+
+  //     return () => {
+  //       // Do something when the screen is unfocused
+  //       // Useful for cleanup functions
+  //       delete route.params
+  //     };
+  //   }, [])
+  // );
+
 
   const getBrands = useCallback(async () => {
     try {
@@ -121,7 +134,7 @@ const ProductListScreen = ({route, navigation}: any) => {
 
   const getProductByBrand = useCallback(async () => {
     try {
-      const res = await brandProduct({brand: [route.params.brand_id]});
+      const res = await brandProduct({brand: [route.params.filter.brand_id]});
       setProducts(res.data.data);
       setLoading(false);
     } catch (error) {
@@ -131,7 +144,7 @@ const ProductListScreen = ({route, navigation}: any) => {
 
   const getProductByKeyword = useCallback(async () => {
     try {
-      const res = await searchProduct(route.params.keyword);
+      const res = await searchProduct(route.params.filter.keyword);
       setProducts(res.data.data);
       setLoading(false);
     } catch (error) {
@@ -141,7 +154,7 @@ const ProductListScreen = ({route, navigation}: any) => {
 
   const getProductByCategory = useCallback(async () => {
     try {
-      const res = await categoryProduct({category: [route.params.category_id]});
+      const res = await categoryProduct({category: [route.params.filter.category_id]});
       setProducts(res.data.data);
       setLoading(false);
     } catch (error) {
@@ -194,7 +207,7 @@ const ProductListScreen = ({route, navigation}: any) => {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     if (route.params) {
-      let type = Object.keys(route.params);
+      let type = Object.keys(route.params.filter);
       console.log(type[0]);
       if (type[0] === 'brand_id') await getProductByBrand();
       if (type[0] === 'category_id') await getProductByCategory();

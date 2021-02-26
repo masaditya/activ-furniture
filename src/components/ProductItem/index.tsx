@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Dimensions, ImageBackground, TouchableOpacity} from 'react-native';
-import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
+import { RFValue} from 'react-native-responsive-fontsize';
 import {View, Text, Colors} from 'react-native-ui-lib';
 import {DETAIL_PRODUCT_SCREEN} from '../../navigation/routename';
 

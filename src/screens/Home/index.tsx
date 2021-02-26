@@ -22,8 +22,8 @@ import {
   PRODUCT_LIST_SCREEN,
 } from '../../navigation/routename';
 import PopupModal from './PopupModal';
-import { CommonActions } from '@react-navigation/native';
-
+import {CommonActions} from '@react-navigation/native';
+import Carousel from 'react-native-banner-carousel';
 
 export default function HomeScreen({navigation, route}: any) {
   const {getAllProduct, getBanner} = useProductService();
@@ -35,7 +35,6 @@ export default function HomeScreen({navigation, route}: any) {
   const [keyword, setKeyword] = useState('');
   const [popUpVisibility, setPopUpVisibility] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState(false);
- 
 
   useEffect(() => {
     navigation.setOptions({
@@ -48,24 +47,12 @@ export default function HomeScreen({navigation, route}: any) {
         />
       ),
     });
-    
 
     getProduct();
     getBanners();
     getBrands();
     getCategories();
 
-    // navigation.dispatch(
-    //   CommonActions.reset({
-    //     index: 1,
-    //     routes: [
-    //       {
-    //         name: PRODUCT_LIST_SCREEN,
-    //         params: { },
-    //       },
-    //     ],
-    //   })
-    // );
     return () => {
       setPopUpVisibility(false);
     };
@@ -133,19 +120,27 @@ export default function HomeScreen({navigation, route}: any) {
               visible={popUpVisibility}
               setVisible={setPopUpVisibility}
             />
-            <ViewPager>
+            <Carousel
+              loop
+              autoplay
+              autoplayTimeout={2000}
+              index={0}
+              pageSize={Dimensions.get('window').width}>
               {banner.map((item: any, key) => {
                 return (
                   <Image
                     key={key}
-                    style={{width: RFPercentage(100), height: RFValue(200)}}
+                    style={{
+                      width: Dimensions.get('window').width,
+                      height: RFValue(230),
+                    }}
                     source={{
                       uri: item.featured_image || '',
                     }}
                   />
                 );
               })}
-            </ViewPager>
+            </Carousel>
             <View padding-20>
               <Input
                 placeholder="Search Product"
@@ -160,7 +155,9 @@ export default function HomeScreen({navigation, route}: any) {
                   />
                 )}
                 onSubmitEditing={() =>
-                  navigation.navigate(PRODUCT_LIST_SCREEN, {keyword: keyword})
+                  navigation.navigate(PRODUCT_LIST_SCREEN, {
+                    filter: {keyword: keyword},
+                  })
                 }
                 onChangeText={(nextValue) => setKeyword(nextValue)}
                 value={keyword}
@@ -183,7 +180,9 @@ export default function HomeScreen({navigation, route}: any) {
                       <TouchableOpacity
                         onPress={() =>
                           navigation.navigate(PRODUCT_LIST_SCREEN, {
-                            brand_id: item.brand_id,
+                            filter: {
+                              brand_id: item.brand_id,
+                            },
                           })
                         }>
                         <Image
@@ -203,9 +202,8 @@ export default function HomeScreen({navigation, route}: any) {
                     </View>
                   );
                 })}
-               
               </ScrollView>
-             
+
               <View row paddingT-10 spread centerV>
                 <Text font14>Categories</Text>
                 <Text
@@ -224,7 +222,9 @@ export default function HomeScreen({navigation, route}: any) {
                       <TouchableOpacity
                         onPress={() =>
                           navigation.navigate(PRODUCT_LIST_SCREEN, {
-                            category_id: item.category_id,
+                            filter: {
+                              category_id: item.category_id,
+                            },
                           })
                         }>
                         <Image
@@ -272,10 +272,11 @@ export default function HomeScreen({navigation, route}: any) {
       }}
       numColumns={2}
       refreshControl={
-        <RefreshControl 
-        colors={[color.primary, "#FFFFFF"]}
-        
-        refreshing={refreshing} onRefresh={onRefresh} />
+        <RefreshControl
+          colors={[color.primary, '#FFFFFF']}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
       }
       keyExtractor={(item, index) => index.toString()}></FlatList>
   );

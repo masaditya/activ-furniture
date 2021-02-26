@@ -1,13 +1,19 @@
 import {useNavigation} from '@react-navigation/native';
 import {Button, Tab, TabView, ViewPager} from '@ui-kitten/components';
 import React, {useCallback, useEffect, useState} from 'react';
-import {ActivityIndicator, Linking, RefreshControl} from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  Linking,
+  LogBox,
+  RefreshControl,
+} from 'react-native';
 import {
   FlatList,
   ScrollView,
   TouchableOpacity,
 } from 'react-native-gesture-handler';
-import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
+import { RFValue} from 'react-native-responsive-fontsize';
 import {View, Text, Colors, Button as UIBtn, Image} from 'react-native-ui-lib';
 // import {Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -17,6 +23,7 @@ import ProductItem from '../../components/ProductItem';
 import {useProductService} from '../../hook/services';
 import {productList} from '../../mock/data';
 import DescriptionInfo from './DescriptionInfo';
+import Carousel from 'react-native-banner-carousel';
 
 export default function DetailsScreen(props: any) {
   const {getDetailProduct} = useProductService();
@@ -31,7 +38,7 @@ export default function DetailsScreen(props: any) {
 
   useEffect(() => {
     getDetail();
-
+    LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     return () => {
       setLoading(true);
     };
@@ -64,7 +71,8 @@ export default function DetailsScreen(props: any) {
       {!loading ? (
         <View flex-1 backgroundColor={Colors.white}>
           <ScrollView>
-            <ViewPager>
+            
+            <Carousel loop index={0} pageSize={Dimensions.get('window').width} >
               {productDetail.image &&
                 productDetail.image.map((item: string, i: number) => {
                   return (
@@ -79,7 +87,20 @@ export default function DetailsScreen(props: any) {
                     />
                   );
                 })}
-            </ViewPager>
+              {productDetail.video && (
+                <WebView
+                  style={{width: '100%', height: 230, marginHorizontal: 'auto'}}
+                  javaScriptEnabled={true}
+                  domStorageEnabled={true}
+                  allowsFullscreenVideo
+                  allowsInlineMediaPlayback
+                  mediaPlaybackRequiresUserAction
+                  source={{
+                    uri: `https://www.youtube.com/embed/${videoID}`,
+                  }}
+                />
+              )}
+            </Carousel>
 
             <View backgroundColor={Colors.white} padding-15>
               <Text style={{paddingVertical: RFValue(5)}} font16bold>
@@ -169,21 +190,6 @@ export default function DetailsScreen(props: any) {
                             })}
                         </View>
                       </View>
-                      {productDetail.video && (
-                        <View centerH>
-                          <WebView
-                            style={{marginTop: 20, width: 320, height: 230}}
-                            javaScriptEnabled={true}
-                            domStorageEnabled={true}
-                            allowsFullscreenVideo
-                            allowsInlineMediaPlayback
-                            mediaPlaybackRequiresUserAction
-                            source={{
-                              uri: `https://www.youtube.com/embed/${videoID}`,
-                            }}
-                          />
-                        </View>
-                      )}
                     </View>
                   </ScrollView>
                 </View>
