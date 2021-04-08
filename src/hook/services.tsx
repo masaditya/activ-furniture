@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {RESTORE_FAILED, RESTORE_TOKEN} from '../context/actionTypes';
 
 export const useProductService = () => {
-  const baseUrl = 'http://catalog.wlrapps.com/Api_app';
+  const baseUrl = 'https://catalog.wlrapps.com/Api_app';
   const getAllProduct = async () => await axios.get(`${baseUrl}/product/all`);
   const getDetailProduct = async (id: any) =>
     await axios.get(`${baseUrl}/product/${id}`);
@@ -25,7 +25,7 @@ export const useProductService = () => {
 };
 
 export const useBrandService = () => {
-  const baseUrl = 'http://catalog.wlrapps.com/Api_app';
+  const baseUrl = 'https://catalog.wlrapps.com/Api_app';
   const getAllBrand = async () => await axios.get(`${baseUrl}/master/brand`);
   const brandProduct = async (brand: {brand: string[]}) => {
     const body = new URLSearchParams();
@@ -87,7 +87,7 @@ export const useBrandService = () => {
 };
 
 export const useAuthService = () => {
-  const baseUrl = 'http://catalog.wlrapps.com/Api_app';
+  const baseUrl = 'https://catalog.wlrapps.com/Api_app';
 
   const loginUser = async (username: string, password: string) => {
     const body = new URLSearchParams();
@@ -158,7 +158,7 @@ export const useAuthService = () => {
 };
 
 export const useBlogService = () => {
-  const baseUrl = 'http://catalog.wlrapps.com/Api_app/blog';
+  const baseUrl = 'https://catalog.wlrapps.com/Api_app/blog';
   const getListBlog = async () => axios.get(`${baseUrl}/all`);
   const readBlog = async (id: string) => axios.get(`${baseUrl}/${id}`);
 

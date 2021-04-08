@@ -72,7 +72,7 @@ export default function DetailsScreen(props: any) {
         <View flex-1 backgroundColor={Colors.white}>
           <ScrollView>
             
-            <Carousel loop index={0} pageSize={Dimensions.get('window').width} >
+            <Carousel pageIndicatorStyle={{backgroundColor:color.primary}} pageSize={Dimensions.get('window').width} >
               {productDetail.image &&
                 productDetail.image.map((item: string, i: number) => {
                   return (

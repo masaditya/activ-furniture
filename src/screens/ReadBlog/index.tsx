@@ -19,8 +19,7 @@ const ReadBlogScreen = ({route, navigation}: any) => {
     try {
       const res = await readBlog(route.params.id);
       setBlogContent(res.data.data[0]);
-    } catch (error) {
-    }
+    } catch (error) {}
   }, [route.params]);
 
   return (
@@ -66,7 +65,7 @@ const ReadBlogScreen = ({route, navigation}: any) => {
             borderTopLeftRadius: RFValue(20),
             borderTopRightRadius: RFValue(30),
           }}>
-          <Markdown>{contentMarkdown}</Markdown>
+          <Markdown>{blogContent.konten || contentMarkdown}</Markdown>
         </View>
       </ScrollView>
     </View>
