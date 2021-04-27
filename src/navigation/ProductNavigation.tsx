@@ -3,6 +3,7 @@ import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
 import React from 'react';
 import {View, Text} from 'react-native';
 import {Colors} from 'react-native-ui-lib';
+import color from '../components/Color';
 import DetailsScreen from '../screens/Details';
 import ReadBlogScreen from '../screens/ReadBlog';
 import {DETAIL_PRODUCT_SCREEN, READ_BLOG_SCREEN} from './routename';
@@ -22,7 +23,7 @@ const ProductNavigation = () => {
           },
           headerLeft: () => (
             <HeaderBackButton
-              tintColor={Colors.white}
+              tintColor={color.primary}
               onPress={() => navigation.goBack()}
             />
           ),
@@ -32,7 +33,6 @@ const ProductNavigation = () => {
         name={DETAIL_PRODUCT_SCREEN}
         component={DetailsScreen}
       />
-      
     </Stack.Navigator>
   );
 };

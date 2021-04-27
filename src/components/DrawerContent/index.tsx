@@ -6,6 +6,7 @@ import color from '../Color';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 import {useNavigation} from '@react-navigation/native';
 import {
+  ABOUT_SCREEN,
   ACCOUNT_SCREEN,
   BLOG_SCREEN,
   HOME_SCREEN,
@@ -40,29 +41,6 @@ const CustomDrawerContent = (props: any) => {
 
   return (
     <DrawerContentScrollView {...props}>
-      {/* <View row centerV paddingV-40 paddingH-20>
-        <Image
-          style={{
-            width: 70,
-            height: 70,
-            borderRadius: RFValue(10),
-          }}
-          source={{
-            uri:
-              'https://www.bdbpitmans.com/wp-content/uploads/placeholder-profile.png',
-          }}
-        />
-        <View paddingL-10>
-          <Text font18bold numberOfLines={1}>
-            Albus Dumbledore
-          </Text>
-          <Text
-            grey40
-            onPress={() => props.navigation.navigate(ACCOUNT_SCREEN)}>
-            View Profile
-          </Text>
-        </View>
-      </View> */}
       <UserAvatar />
       <View paddingH-20>
         <View row paddingV-15 centerV>
@@ -80,19 +58,20 @@ const CustomDrawerContent = (props: any) => {
             style={{paddingLeft: RFValue(20)}}
             font16bold
             onPress={() => props.navigation.navigate(BLOG_SCREEN)}>
-            Blog
+            Berita
           </Text>
         </View>
         <View row paddingV-15 centerV>
-          <Icon name="clipboard" size={RFValue(20)} color={color.primary} />
+          <Icon name="basket" size={RFValue(20)} color={color.primary} />
           <Text style={{paddingLeft: RFValue(20)}} font16bold>
-            Term & Condition
+            Katalog
           </Text>
         </View>
         <View row paddingV-15 centerV>
           <Icon name="help-circle" size={RFValue(20)} color={color.primary} />
-          <Text style={{paddingLeft: RFValue(20)}} font16bold>
-            Help
+          <Text style={{paddingLeft: RFValue(20)}} font16bold 
+          onPress={() => props.navigation.navigate(ABOUT_SCREEN)}>
+            Tentang Kami
           </Text>
         </View>
         {/* <View row paddingV-15 centerV>

@@ -6,10 +6,14 @@ import {View, Text, Colors, Image} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../components/Color';
 import {useBlogService} from '../../hook/services';
+import HTML from 'react-native-render-html';
+import {Dimensions, useWindowDimensions} from 'react-native';
+import WebView from 'react-native-webview';
 
 const ReadBlogScreen = ({route, navigation}: any) => {
   const {readBlog} = useBlogService();
   const [blogContent, setBlogContent] = useState<any>({});
+  const contentWidth = useWindowDimensions().width;
   useEffect(() => {
     getBlogContent();
     return () => {};
@@ -59,44 +63,39 @@ const ReadBlogScreen = ({route, navigation}: any) => {
           </View>
         </View>
         <View
+          flex-1
           padding-30
           backgroundColor={Colors.white}
           style={{
             borderTopLeftRadius: RFValue(20),
             borderTopRightRadius: RFValue(30),
           }}>
-          <Markdown>{blogContent.konten || contentMarkdown}</Markdown>
+          <WebView
+            injectedJavaScript={`const meta = document.createElement('meta'); meta.setAttribute('content', 'width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `}
+            scalesPageToFit={false}
+            originWhitelist={['*']}
+            style={{
+              width: Dimensions.get('screen').width,
+              height: Dimensions.get('screen').height,
+            }}
+            automaticallyAdjustContentInsets={false}
+            scrollEnabled={true}
+            domStorageEnabled={true}
+            javaScriptEnabled={true}
+            source={{html: blogContent.konten || contentHTML}}
+          />
+          {/* <HTML source={blogContent.konten || contentHTML} /> */}
         </View>
       </ScrollView>
     </View>
   );
 };
 
-const contentMarkdown = `### Welcome to StackEdit!
-
-Hi! I'm your first Markdown file in **StackEdit**. If you want to learn about StackEdit, you can read me. If you want to play with Markdown, you can edit me. Once you have finished with me, you can create new files by opening the **file explorer** on the left corner of the navigation bar.
-
-
-### Files
-
-StackEdit stores your files in your browser, which means all your files are automatically saved locally and are accessible **offline!**
-
-### Create files and folders
-
-The file explorer is accessible using the button in left corner of the navigation bar. You can create a new file by clicking the **New file** button in the file explorer. You can also create folders by clicking the **New folder** button.
-
-### Switch to another file
-
-All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
-
-### Rename a file
-
-You can rename the current file by clicking the file name in the navigation bar or by clicking the **Rename** button in the file explorer.
-
-### Delete a file
-
-You can delete the current file by clicking the **Remove** button in the file explorer. The file will be moved into the **Trash** folder and automatically deleted after 7 days of inactivity.
-
+const contentHTML = `
+<h1>This HTML snippet is now rendered with native components !</h1>
+<h2>Enjoy a webview-free and blazing fast application</h2>
+<img src="https://i.imgur.com/dHLmxfO.jpg?2" />
+<em style="textAlign: center;">Look at how happy this native cat is</em>
 `;
 
 export default ReadBlogScreen;

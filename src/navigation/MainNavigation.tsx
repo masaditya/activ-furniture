@@ -14,6 +14,7 @@ import {
   READ_BLOG_SCREEN,
   BRAND_LIST_SCREEN,
   CATEGORY_LIST_SCREEN,
+  ABOUT_SCREEN,
 } from './routename';
 import DetailsScreen from '../screens/Details';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -30,6 +31,7 @@ import CustomDrawerContent from '../components/DrawerContent/index';
 import BrandListScreen from '../screens/BrandList';
 import CategoryListScreen from '../screens/CategoryList';
 import BlogNavigation from './BlogNavigation';
+import AboutScreen from '../screens/About';
 
 const Drawer = createDrawerNavigator();
 
@@ -126,14 +128,25 @@ export default function MainNavigation(props: any) {
         name={ACCOUNT_SCREEN}
         component={AccountScreen}
       />
+
       <Drawer.Screen
         options={{
           ...mainHeaderOptions,
-          headerTitle: 'News',
+          headerTitle: 'Berita',
           headerRight: () => null,
         }}
         name={BLOG_SCREEN}
         component={BlogScreen}
+      />
+
+      <Drawer.Screen
+        options={{
+          ...mainHeaderOptions,
+          headerTitle: 'Tentang Kami',
+          headerRight: () => null,
+        }}
+        name={ABOUT_SCREEN}
+        component={AboutScreen}
       />
       <Drawer.Screen name="Blog" component={BlogNavigation} />
 

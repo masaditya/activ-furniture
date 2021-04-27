@@ -13,7 +13,7 @@ export const useProductService = () => {
     await axios.post(`${baseUrl}/product/all`, category);
   const getBanner = async () => axios.get(`${baseUrl}/banner`);
   const getPopup = async () => axios.get(`${baseUrl}/popup`);
-  
+
   return {
     getAllProduct,
     getDetailProduct,
@@ -165,5 +165,14 @@ export const useBlogService = () => {
   return {
     getListBlog,
     readBlog,
+  };
+};
+
+export const useAbout = () => {
+  const baseUrl = 'https://catalog.wlrapps.com/Api_app/about_us';
+  const getAbout = async () => axios.get(`${baseUrl}`);
+
+  return {
+    getAbout,
   };
 };

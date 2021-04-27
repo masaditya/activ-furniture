@@ -46,7 +46,6 @@ export default function DetailsScreen(props: any) {
 
   const getDetail = useCallback(async () => {
     setLoading(true);
-
     try {
       const res = await getDetailProduct(props.route.params.product.id);
       if (res) {
@@ -60,9 +59,9 @@ export default function DetailsScreen(props: any) {
     setLoading(false);
   }, [props.route.params]);
 
-  const onRefresh = useCallback(async () => {
+  const onRefresh = useCallback( () => {
     setRefreshing(true);
-    await getDetail();
+    getDetail();
     setRefreshing(false);
   }, [refreshing]);
 
@@ -70,8 +69,15 @@ export default function DetailsScreen(props: any) {
     <>
       {!loading ? (
         <View flex-1 backgroundColor={Colors.white}>
-          <ScrollView>
-            
+          <ScrollView
+           refreshControl={
+            <RefreshControl
+              colors={[color.primary, '#FFFFFF']}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+          >
             <Carousel pageIndicatorStyle={{backgroundColor:color.primary}} pageSize={Dimensions.get('window').width} >
               {productDetail.image &&
                 productDetail.image.map((item: string, i: number) => {
@@ -128,19 +134,19 @@ export default function DetailsScreen(props: any) {
                         value={productDetail.brand || '-'}
                       />
                       <DescriptionInfo
-                        field="Dimension (in)"
+                        field="Dimensi"
                         value={productDetail.dimension || '-'}
                       />
                       <DescriptionInfo
-                        field="Total Volume"
+                        field="Volume"
                         value={productDetail.total_volume || '-'}
                       />
                       <DescriptionInfo
-                        field="Gross Weight"
+                        field="Berat Kotor"
                         value={productDetail.gross_weight || '-'}
                       />
                       <DescriptionInfo
-                        field="Series Name"
+                        field="Series"
                         value={productDetail.series_name || '-'}
                       />
 
@@ -149,25 +155,26 @@ export default function DetailsScreen(props: any) {
                         value={productDetail.product_assembly || '-'}
                       /> */}
                       {productDetail.product_assembly && (
-                        <View row flex-2>
+                        <View row flex-2 centerV>
                           <View flex-1>
-                            <Text grey40>Product Assembly</Text>
+                            <Text grey40>Perakitan Produk</Text>
                           </View>
                           <View flex-1>
-                            <Text
-                              color={color.primary}
-                              font12bold
+                            <UIBtn
+                              fullWidth
+                              backgroundColor={color.primary}
+                              size={UIBtn.sizes.small}
                               onPress={() =>
                                 Linking.openURL(productDetail.product_assembly)
                               }>
-                              Open Link
-                            </Text>
+                              <Text white>Buka</Text>
+                            </UIBtn>
                           </View>
                         </View>
                       )}
-                      <View row flex-2 centerV>
+                      <View row flex-2 centerV marginV-10>
                         <View flex-1>
-                          <Text grey40>Color</Text>
+                          <Text grey40>Warna</Text>
                         </View>
                         <View flex-1>
                           {productDetail.color &&
@@ -196,19 +203,8 @@ export default function DetailsScreen(props: any) {
               </Tab>
               <Tab
                 style={{backgroundColor: Colors.white, flex: 1}}
-                title={() => <Text color={color.primary}>Similar</Text>}>
-                <FlatList
-                  data={productList.slice(0, 4)}
-                  renderItem={(item) => <ProductItem {...item.item} />}
-                  numColumns={2}
-                  refreshControl={
-                    <RefreshControl
-                      colors={[color.primary, '#FFFFFF']}
-                      refreshing={refreshing}
-                      onRefresh={onRefresh}
-                    />
-                  }
-                  keyExtractor={(item, index) => index.toString()}></FlatList>
+                title={() => <Text color={color.primary}>Product Knowledge</Text>}>
+                <View></View>
               </Tab>
             </TabView>
           </ScrollView>

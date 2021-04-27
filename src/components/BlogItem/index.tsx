@@ -49,7 +49,7 @@ const BlogItem = (props: any) => {
                 navigation.navigate('Blog', {screen: READ_BLOG_SCREEN, params : {id : props.id}})
               }
               backgroundColor={color.primary}>
-              <Text white>Read More</Text>
+              <Text white>Baca</Text>
             </Button>
           </View>
         </View>

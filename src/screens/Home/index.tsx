@@ -112,9 +112,14 @@ export default function HomeScreen({navigation, route}: any) {
   }, [refreshing]);
 
   return (
-    <FlatList
-      ListHeaderComponent={
-        <>
+        <ScrollView
+        refreshControl={
+          <RefreshControl
+            colors={[color.primary, '#FFFFFF']}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }>
           <View style={{backgroundColor: Colors.white}}>
             <PopupModal
               visible={popUpVisibility}
@@ -124,6 +129,7 @@ export default function HomeScreen({navigation, route}: any) {
               loop
               autoplay
               autoplayTimeout={2000}
+              pageIndicatorStyle={{backgroundColor:color.primary}}
               index={0}
               pageSize={Dimensions.get('window').width}>
               {banner.map((item: any, key) => {
@@ -252,32 +258,9 @@ export default function HomeScreen({navigation, route}: any) {
                   );
                 })}
               </ScrollView>
-
-              <View row paddingT-10 spread centerV>
-                <Text font14>Best Seller</Text>
-                <Text
-                  onPress={() => navigation.navigate(PRODUCT_LIST_SCREEN)}
-                  font12
-                  color={color.primary}>
-                  View All
-                </Text>
-              </View>
             </View>
           </View>
-        </>
-      }
-      data={homeProduct}
-      renderItem={(item) => {
-        return <ProductItem {...item.item} />;
-      }}
-      numColumns={2}
-      refreshControl={
-        <RefreshControl
-          colors={[color.primary, '#FFFFFF']}
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
-      keyExtractor={(item, index) => index.toString()}></FlatList>
+        </ScrollView>
+      
   );
 }
