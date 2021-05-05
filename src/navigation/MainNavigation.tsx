@@ -16,13 +16,12 @@ import {
   CATEGORY_LIST_SCREEN,
   ABOUT_SCREEN,
   KATALOG_SCREEN,
+  SERIES_SCREEN,
 } from './routename';
 import DetailsScreen from '../screens/Details';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {RFValue} from 'react-native-responsive-fontsize';
 import ProductListScreen from '../screens/ProductList';
-import LoginScreen from '../screens/Auth/Login';
-import {Colors} from 'react-native-ui-lib';
 import {HeaderBackButton} from '@react-navigation/stack';
 import AccountScreen from '../screens/Account';
 import RegisterScreen from '../screens/Auth/Register';
@@ -34,6 +33,7 @@ import CategoryListScreen from '../screens/CategoryList';
 import BlogNavigation from './BlogNavigation';
 import AboutScreen from '../screens/About';
 import KatalogScreen from '../screens/Katalog';
+import SeriesScreen from '../screens/Series';
 
 const Drawer = createDrawerNavigator();
 
@@ -109,6 +109,17 @@ export default function MainNavigation(props: any) {
         })}
         name={BRAND_LIST_SCREEN}
         component={BrandListScreen}
+      />
+      <Drawer.Screen
+        options={({navigation}) => ({
+          ...mainHeaderOptions,
+          gestureEnabled: false,
+          headerLeft: (props) => (
+            <HeaderBackButton onPress={() => navigation.goBack()} />
+          ),
+        })}
+        name={SERIES_SCREEN}
+        component={SeriesScreen}
       />
       <Drawer.Screen
         options={({navigation}) => ({

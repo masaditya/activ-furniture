@@ -22,7 +22,7 @@ import color from '../../components/Color';
 import ProductItem from '../../components/ProductItem';
 import {useBrandService, useProductService} from '../../hook/services';
 import {productList} from '../../mock/data';
-import { PRODUCT_LIST_SCREEN } from '../../navigation/routename';
+import {PRODUCT_LIST_SCREEN} from '../../navigation/routename';
 import EmptyProduct from './EmptyProduct';
 import RightDrawer from './RightDrawer';
 
@@ -68,7 +68,6 @@ const ProductListScreen = ({route, navigation}: any) => {
   }, []);
 
   useEffect(() => {
-    console.log(route.params.filter)
     if (route.params) {
       let type = Object.keys(route.params.filter);
       // console.log(route.params);
@@ -79,7 +78,6 @@ const ProductListScreen = ({route, navigation}: any) => {
       getAllProducts();
     }
     return () => {
-     
       setLoading(true);
     };
   }, [route.params]);
@@ -95,7 +93,6 @@ const ProductListScreen = ({route, navigation}: any) => {
   //     };
   //   }, [])
   // );
-
 
   const getBrands = useCallback(async () => {
     try {
@@ -154,7 +151,9 @@ const ProductListScreen = ({route, navigation}: any) => {
 
   const getProductByCategory = useCallback(async () => {
     try {
-      const res = await categoryProduct({category: [route.params.filter.category_id]});
+      const res = await categoryProduct({
+        category: [route.params.filter.category_id],
+      });
       setProducts(res.data.data);
       setLoading(false);
     } catch (error) {

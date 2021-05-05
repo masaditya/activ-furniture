@@ -1,8 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {Dimensions, FlatList} from 'react-native';
-import {ScrollView, TouchableHighlight} from 'react-native-gesture-handler';
-import {RFValue} from 'react-native-responsive-fontsize';
+import {FlatList} from 'react-native';
 import {
   View,
   Text,

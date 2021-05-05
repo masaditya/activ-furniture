@@ -1,12 +1,9 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Dimensions, ImageBackground, TouchableOpacity} from 'react-native';
-import { RFValue} from 'react-native-responsive-fontsize';
+import {RFValue} from 'react-native-responsive-fontsize';
 import {View, Text, Colors} from 'react-native-ui-lib';
-import {
-  DETAIL_PRODUCT_SCREEN,
-  PRODUCT_LIST_SCREEN,
-} from '../../navigation/routename';
+import {SERIES_SCREEN} from '../../navigation/routename';
 
 const BrandItem = (props?: any) => {
   const {navigate} = useNavigation();
@@ -17,7 +14,7 @@ const BrandItem = (props?: any) => {
       style={{aspectRatio: 1, flex: 1 / 2}}>
       <TouchableOpacity
         onPress={() => {
-          navigate(PRODUCT_LIST_SCREEN, {filter : {brand_id: props.brand_id}});
+          navigate(SERIES_SCREEN, {filter: {brand_id: props.brand_id}});
         }}>
         <ImageBackground
           source={{
