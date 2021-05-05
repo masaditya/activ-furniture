@@ -10,6 +10,7 @@ import {
   ACCOUNT_SCREEN,
   BLOG_SCREEN,
   HOME_SCREEN,
+  KATALOG_SCREEN,
   LOGIN_SCREEN,
 } from '../../navigation/routename';
 import {useAuthService} from '../../hook/services';
@@ -63,7 +64,8 @@ const CustomDrawerContent = (props: any) => {
         </View>
         <View row paddingV-15 centerV>
           <Icon name="basket" size={RFValue(20)} color={color.primary} />
-          <Text style={{paddingLeft: RFValue(20)}} font16bold>
+          <Text style={{paddingLeft: RFValue(20)}} font16bold
+          onPress={() => props.navigation.navigate(KATALOG_SCREEN)}>
             Katalog
           </Text>
         </View>

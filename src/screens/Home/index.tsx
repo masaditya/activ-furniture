@@ -1,19 +1,16 @@
 import {useFocusEffect} from '@react-navigation/native';
-import {Input, ViewPager} from '@ui-kitten/components';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import {Input} from '@ui-kitten/components';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Dimensions,
-  FlatList,
-  ImageBackground,
   RefreshControl,
   ToastAndroid,
 } from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
-import {View, Text, Button, Image, Colors} from 'react-native-ui-lib';
+import { RFValue} from 'react-native-responsive-fontsize';
+import {View, Text, Image, Colors} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../components/Color';
-import ProductItem from '../../components/ProductItem';
 import {useBrandService, useProductService} from '../../hook/services';
 import {
   ACCOUNT_SCREEN,
@@ -22,7 +19,6 @@ import {
   PRODUCT_LIST_SCREEN,
 } from '../../navigation/routename';
 import PopupModal from './PopupModal';
-import {CommonActions} from '@react-navigation/native';
 import Carousel from 'react-native-banner-carousel';
 
 export default function HomeScreen({navigation, route}: any) {
@@ -112,7 +108,7 @@ export default function HomeScreen({navigation, route}: any) {
   }, [refreshing]);
 
   return (
-        <ScrollView
+      <ScrollView
         refreshControl={
           <RefreshControl
             colors={[color.primary, '#FFFFFF']}
@@ -149,7 +145,7 @@ export default function HomeScreen({navigation, route}: any) {
             </Carousel>
             <View padding-20>
               <Input
-                placeholder="Search Product"
+                placeholder="Cari Produk"
                 size="large"
                 status="success"
                 focusable
@@ -176,7 +172,7 @@ export default function HomeScreen({navigation, route}: any) {
                   }
                   font12
                   color={color.primary}>
-                  View All
+                  Lihat Semua
                 </Text>
               </View>
               <ScrollView showsHorizontalScrollIndicator={false} horizontal>
@@ -211,14 +207,14 @@ export default function HomeScreen({navigation, route}: any) {
               </ScrollView>
 
               <View row paddingT-10 spread centerV>
-                <Text font14>Categories</Text>
+                <Text font14>Kategori</Text>
                 <Text
                   onPress={() =>
                     navigation.navigate(CATEGORY_LIST_SCREEN, homeCategory)
                   }
                   font12
                   color={color.primary}>
-                  View All
+                  Lihat Semua
                 </Text>
               </View>
               <ScrollView showsHorizontalScrollIndicator={false} horizontal>

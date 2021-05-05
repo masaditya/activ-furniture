@@ -15,6 +15,7 @@ import {
   BRAND_LIST_SCREEN,
   CATEGORY_LIST_SCREEN,
   ABOUT_SCREEN,
+  KATALOG_SCREEN,
 } from './routename';
 import DetailsScreen from '../screens/Details';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -32,6 +33,7 @@ import BrandListScreen from '../screens/BrandList';
 import CategoryListScreen from '../screens/CategoryList';
 import BlogNavigation from './BlogNavigation';
 import AboutScreen from '../screens/About';
+import KatalogScreen from '../screens/Katalog';
 
 const Drawer = createDrawerNavigator();
 
@@ -138,6 +140,15 @@ export default function MainNavigation(props: any) {
         name={BLOG_SCREEN}
         component={BlogScreen}
       />
+      <Drawer.Screen
+        options={{
+          ...mainHeaderOptions,
+          headerTitle: 'Katalog',
+          headerRight: () => null,
+        }}
+        name={KATALOG_SCREEN}
+        component={KatalogScreen}
+      />
 
       <Drawer.Screen
         options={{
@@ -149,6 +160,7 @@ export default function MainNavigation(props: any) {
         component={AboutScreen}
       />
       <Drawer.Screen name="Blog" component={BlogNavigation} />
+
 
     </Drawer.Navigator>
   );

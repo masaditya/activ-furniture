@@ -161,10 +161,26 @@ export const useBlogService = () => {
   const baseUrl = 'https://catalog.wlrapps.com/Api_app/blog';
   const getListBlog = async () => axios.get(`${baseUrl}/all`);
   const readBlog = async (id: string) => axios.get(`${baseUrl}/${id}`);
+  const getBerita = async () => axios.get(`${baseUrl}/berita`);
+  const getKatalog = async () => axios.get(`${baseUrl}/katalog`);
+  const getBeritaByRole = async (role: string) =>
+    axios.post(`${baseUrl}/berita}`, {role: role});
+  const getBeritaByKeyword = async (keyword: string) =>
+    axios.post(`${baseUrl}/berita`, {keyword: keyword});
+  const getKatalogByBrand = async (brand: string) =>
+    axios.post(`${baseUrl}/katalog`, {brand: brand});
+  const getKatalogByKeyword = async (keyword: string) =>
+    axios.post(`${baseUrl}/katalog`, {keyword: keyword});
 
   return {
     getListBlog,
     readBlog,
+    getBeritaByRole,
+    getKatalogByBrand,
+    getKatalogByKeyword,
+    getBeritaByKeyword,
+    getBerita,
+    getKatalog,
   };
 };
 
