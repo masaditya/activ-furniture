@@ -7,12 +7,14 @@ import color from '../Color';
 import {useNavigation} from '@react-navigation/native';
 import {PRODUCT_LIST_SCREEN} from '../../navigation/routename';
 
-const SeriesItem = () => {
+const SeriesItem = ({series}: any) => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate(PRODUCT_LIST_SCREEN);
+        navigation.navigate(PRODUCT_LIST_SCREEN, {
+          filter: {series: series.series_id},
+        });
       }}>
       <View row padding-10 centerV>
         <Image
@@ -23,16 +25,16 @@ const SeriesItem = () => {
           }}
           source={{
             uri:
-              'https://image.freepik.com/free-photo/empty-living-room-with-blue-sofa-plants-table-empty-green-wall_41470-1377.jpg',
+              'https://avantifurniture.id/upload/image/series/source/NmL5KprUKInhZRON.jpg',
           }}
         />
         <View flex-1 padding-10 row spread>
           <View>
             <Text style={{padding: RFValue(5)}} font18bold green10>
-              Sofas
+              {series.series_name}
             </Text>
             <Text style={{padding: RFValue(5)}} font12bold>
-              L Shapes
+              {series.series_info}
             </Text>
           </View>
           <Icon name="arrow-forward" size={25} color={color.primary} />

@@ -25,6 +25,7 @@ const AccountScreen = ({navigation}: any) => {
     // const username = info.payload.user.username;
     if (globalState.user) {
       const res = await getUserInfo(globalState.user.username);
+      console.log(globalState);
     }
   }, []);
   return (

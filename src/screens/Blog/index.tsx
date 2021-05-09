@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {ScrollView} from 'react-native-gesture-handler';
 import {View, Text, Colors, Button} from 'react-native-ui-lib';
 import BlogItem from '../../components/BlogItem';
@@ -8,20 +8,26 @@ import {Input, ViewPager} from '@ui-kitten/components';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import {RFValue} from 'react-native-responsive-fontsize';
+import {RootContext} from '../../context';
+import EmptyBlog from './EmptyBlog';
 
 const BlogScreen = ({route, navigation}: any) => {
   const {getListBlog, getBeritaByRole, getBeritaByKeyword} = useBlogService();
   const [blogs, setBlogs] = useState([]);
   const [keyword, setKeyword] = useState('');
+  // @ts-ignore
+  const {globalState, dispatch} = useContext(RootContext);
 
   useEffect(() => {
     getBlogs();
+    console.log(globalState);
     return () => {};
   }, []);
 
   const getBlogs = useCallback(async () => {
     try {
-      const res = await getListBlog();
+      const res = await getBeritaByRole(globalState.user.limited);
+      console.log(res.data);
       setBlogs(res.data.data);
     } catch (error) {}
   }, []);
@@ -36,7 +42,7 @@ const BlogScreen = ({route, navigation}: any) => {
   return (
     <View backgroundColor={Colors.white} flexG paddingB-60>
       <ScrollView>
-        <View>
+        <View paddingH-15>
           <Input
             placeholder="Cari Berita"
             size="large"
@@ -50,9 +56,11 @@ const BlogScreen = ({route, navigation}: any) => {
             value={keyword}
           />
         </View>
-        {blogs.map((item, i) => (
-          <BlogItem key={i} {...item} />
-        ))}
+        {blogs.length > 0 ? (
+          blogs.map((item, i) => <BlogItem key={i} {...item} />)
+        ) : (
+          <EmptyBlog />
+        )}
       </ScrollView>
     </View>
   );

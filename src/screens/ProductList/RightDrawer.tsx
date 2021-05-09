@@ -71,7 +71,7 @@ const RightDrawer = (props: RightDrawerProps) => {
           <View
             padding-20
             style={{borderBottomWidth: 1, borderBottomColor: Colors.grey50}}>
-            <Text font16bold>Category</Text>
+            <Text font16bold>Kategori</Text>
             <View
               style={{
                 display: 'flex',
@@ -93,7 +93,7 @@ const RightDrawer = (props: RightDrawerProps) => {
             </View>
           </View>
 
-          <View
+          {/* <View
             padding-20
             style={{borderBottomWidth: 1, borderBottomColor: Colors.grey50}}>
             <Text font16bold>Series</Text>
@@ -116,7 +116,7 @@ const RightDrawer = (props: RightDrawerProps) => {
                 );
               })}
             </View>
-          </View>
+          </View> */}
         </ScrollView>
         <Button
           onPress={() => props.applyFilter()}

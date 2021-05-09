@@ -1,13 +1,8 @@
-import {useFocusEffect} from '@react-navigation/native';
 import {Input} from '@ui-kitten/components';
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  Dimensions,
-  RefreshControl,
-  ToastAndroid,
-} from 'react-native';
+import {Dimensions, RefreshControl, ToastAndroid} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import { RFValue} from 'react-native-responsive-fontsize';
+import {RFValue} from 'react-native-responsive-fontsize';
 import {View, Text, Image, Colors} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../components/Color';
@@ -23,9 +18,8 @@ import PopupModal from './PopupModal';
 import Carousel from 'react-native-banner-carousel';
 
 export default function HomeScreen({navigation, route}: any) {
-  const {getAllProduct, getBanner} = useProductService();
+  const {getBanner} = useProductService();
   const {getAllBrand, getAllCategory} = useBrandService();
-  const [homeProduct, setHomeProduct] = useState<any[]>([]);
   const [banner, setBanner] = useState([]);
   const [homeBrand, setHomeBrand] = useState([]);
   const [homeCategory, setHomeCategory] = useState([]);
@@ -45,7 +39,6 @@ export default function HomeScreen({navigation, route}: any) {
       ),
     });
 
-    getProduct();
     getBanners();
     getBrands();
     getCategories();
@@ -53,17 +46,6 @@ export default function HomeScreen({navigation, route}: any) {
     return () => {
       setPopUpVisibility(false);
     };
-  }, []);
-
-  const getProduct = useCallback(async () => {
-    try {
-      const res = await getAllProduct();
-      if (res) {
-        setHomeProduct([...res.data.data]);
-      }
-    } catch (error) {
-      ToastAndroid.show('Error Get Product', ToastAndroid.SHORT);
-    }
   }, []);
 
   const getBanners = useCallback(async () => {
@@ -101,7 +83,6 @@ export default function HomeScreen({navigation, route}: any) {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await getProduct();
     await getBanners();
     await getBrands();
     await getCategories();
@@ -109,148 +90,138 @@ export default function HomeScreen({navigation, route}: any) {
   }, [refreshing]);
 
   return (
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            colors={[color.primary, '#FFFFFF']}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }>
-          <View style={{backgroundColor: Colors.white}}>
-            <PopupModal
-              visible={popUpVisibility}
-              setVisible={setPopUpVisibility}
-            />
-            <Carousel
-              loop
-              autoplay
-              autoplayTimeout={2000}
-              pageIndicatorStyle={{backgroundColor:color.primary}}
-              index={0}
-              pageSize={Dimensions.get('window').width}>
-              {banner.map((item: any, key) => {
-                return (
-                  <Image
-                    key={key}
-                    style={{
-                      width: Dimensions.get('window').width,
-                      height: RFValue(230),
-                    }}
-                    source={{
-                      uri: item.featured_image || '',
-                    }}
-                  />
-                );
-              })}
-            </Carousel>
-            <View padding-20>
-              <Input
-                placeholder="Cari Produk"
-                size="large"
-                status="success"
-                focusable
-                accessoryLeft={() => (
-                  <Icon
-                    name="search"
-                    size={RFValue(20)}
-                    color={Colors.grey40}
-                  />
-                )}
-                onSubmitEditing={() =>
-                  navigation.navigate(PRODUCT_LIST_SCREEN, {
-                    filter: {keyword: keyword},
-                  })
-                }
-                onChangeText={(nextValue) => setKeyword(nextValue)}
-                value={keyword}
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          colors={[color.primary, '#FFFFFF']}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }>
+      <View style={{backgroundColor: Colors.white}}>
+        <PopupModal visible={popUpVisibility} setVisible={setPopUpVisibility} />
+        <Carousel
+          loop
+          autoplay
+          autoplayTimeout={2000}
+          pageIndicatorStyle={{backgroundColor: color.primary}}
+          index={0}
+          pageSize={Dimensions.get('window').width}>
+          {banner.map((item: any, key) => {
+            return (
+              <Image
+                key={key}
+                style={{
+                  width: Dimensions.get('window').width,
+                  height: RFValue(230),
+                }}
+                source={{
+                  uri: item.featured_image || '',
+                }}
               />
-              <View row paddingT-10 spread centerV>
-                <Text font14>Brand</Text>
-                <Text
-                  onPress={() =>
-                    navigation.navigate(BRAND_LIST_SCREEN, homeBrand)
-                  }
-                  font12
-                  color={color.primary}>
-                  Lihat Semua
-                </Text>
-              </View>
-              <ScrollView showsHorizontalScrollIndicator={false} horizontal>
-                {homeBrand.map((item: any, i) => {
-                  return (
-                    <View padding-10 key={i}>
-                      <TouchableOpacity
-                        onPress={() =>
-                          navigation.navigate(SERIES_SCREEN, {
-                            filter: {
-                              brand_id: item.brand_id,
-                            },
-                          })
-                        }>
-                        <Image
-                          style={{
-                            width: RFValue(100),
-                            height: RFValue(100),
-                            borderRadius: RFValue(10),
-                          }}
-                          source={{
-                            uri: item.brand_photo || '',
-                          }}
-                        />
-                        <Text style={{padding: RFValue(5)}} font14bold>
-                          {item.brand_name}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  );
-                })}
-              </ScrollView>
-
-              <View row paddingT-10 spread centerV>
-                <Text font14>Kategori</Text>
-                <Text
-                  onPress={() =>
-                    navigation.navigate(CATEGORY_LIST_SCREEN, homeCategory)
-                  }
-                  font12
-                  color={color.primary}>
-                  Lihat Semua
-                </Text>
-              </View>
-              <ScrollView showsHorizontalScrollIndicator={false} horizontal>
-                {homeCategory.map((item: any, i) => {
-                  return (
-                    <View padding-10 key={i}>
-                      <TouchableOpacity
-                        onPress={() =>
-                          navigation.navigate(PRODUCT_LIST_SCREEN, {
-                            filter: {
-                              category_id: item.category_id,
-                            },
-                          })
-                        }>
-                        <Image
-                          style={{
-                            width: RFValue(100),
-                            height: RFValue(100),
-                            borderRadius: RFValue(10),
-                          }}
-                          source={{
-                            uri: item.category_photo || '',
-                          }}
-                        />
-                        <Text style={{padding: RFValue(5)}} font14bold>
-                          {item.category_name}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  );
-                })}
-              </ScrollView>
-            </View>
+            );
+          })}
+        </Carousel>
+        <View padding-20>
+          <Input
+            placeholder="Cari Produk"
+            size="large"
+            status="success"
+            focusable
+            accessoryLeft={() => (
+              <Icon name="search" size={RFValue(20)} color={Colors.grey40} />
+            )}
+            onSubmitEditing={() =>
+              navigation.navigate(PRODUCT_LIST_SCREEN, {
+                filter: {keyword: keyword},
+              })
+            }
+            onChangeText={(nextValue) => setKeyword(nextValue)}
+            value={keyword}
+          />
+          <View row paddingT-10 spread centerV>
+            <Text font14>Brand</Text>
+            <Text
+              onPress={() => navigation.navigate(BRAND_LIST_SCREEN, homeBrand)}
+              font12
+              color={color.primary}>
+              Lihat Semua
+            </Text>
           </View>
-        </ScrollView>
-      
+          <ScrollView showsHorizontalScrollIndicator={false} horizontal>
+            {homeBrand.map((item: any, i) => {
+              return (
+                <View padding-10 key={i}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate(SERIES_SCREEN, {
+                        filter: {
+                          brand_id: item.brand_id,
+                        },
+                      })
+                    }>
+                    <Image
+                      style={{
+                        width: RFValue(100),
+                        height: RFValue(100),
+                        borderRadius: RFValue(10),
+                      }}
+                      source={{
+                        uri: item.brand_photo || '',
+                      }}
+                    />
+                    <Text style={{padding: RFValue(5)}} font14bold>
+                      {item.brand_name}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </ScrollView>
+
+          <View row paddingT-10 spread centerV>
+            <Text font14>Kategori</Text>
+            <Text
+              onPress={() =>
+                navigation.navigate(CATEGORY_LIST_SCREEN, homeCategory)
+              }
+              font12
+              color={color.primary}>
+              Lihat Semua
+            </Text>
+          </View>
+          <ScrollView showsHorizontalScrollIndicator={false} horizontal>
+            {homeCategory.map((item: any, i) => {
+              return (
+                <View padding-10 key={i}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate(PRODUCT_LIST_SCREEN, {
+                        filter: {
+                          category_id: item.category_id,
+                        },
+                      })
+                    }>
+                    <Image
+                      style={{
+                        width: RFValue(100),
+                        height: RFValue(100),
+                        borderRadius: RFValue(10),
+                      }}
+                      source={{
+                        uri: item.category_photo || '',
+                      }}
+                    />
+                    <Text style={{padding: RFValue(5)}} font14bold>
+                      {item.category_name}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </ScrollView>
+        </View>
+      </View>
+    </ScrollView>
   );
 }

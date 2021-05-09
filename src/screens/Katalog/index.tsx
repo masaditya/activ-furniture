@@ -7,13 +7,16 @@ import {Input} from '@ui-kitten/components';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {PRODUCT_LIST_SCREEN} from '../../navigation/routename';
-import { Image, ToastAndroid } from 'react-native';
+import {ActivityIndicator, Image, ToastAndroid} from 'react-native';
+import EmptyBlog from '../Blog/EmptyBlog';
+import color from '../../components/Color';
 
 const KatalogScreen = ({route, navigation}: any) => {
-  const { getKatalog} = useBlogService();
+  const {getKatalog, getKatalogByBrand, getKatalogByKeyword} = useBlogService();
   const [keyword, setKeyword] = useState('');
   const [blogs, setBlogs] = useState([]);
   const [homeBrand, setHomeBrand] = useState([]);
+  const [loading, setLoading] = useState(true);
   const {getAllBrand} = useBrandService();
 
   useEffect(() => {
@@ -26,6 +29,7 @@ const KatalogScreen = ({route, navigation}: any) => {
     try {
       const res = await getKatalog();
       setBlogs(res.data.data);
+      setLoading(false);
     } catch (error) {}
   }, []);
 
@@ -40,6 +44,33 @@ const KatalogScreen = ({route, navigation}: any) => {
     }
   }, []);
 
+  const getKatalogBrand = useCallback(async (brand) => {
+    console.log(brand);
+    setLoading(true);
+    try {
+      const katalog = await getKatalogByBrand(brand);
+      if (katalog) {
+        setBlogs(katalog.data.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      ToastAndroid.show('Error Get Katalog', ToastAndroid.SHORT);
+    }
+  }, []);
+
+  const searchKatalog = useCallback(async () => {
+    setLoading(true);
+    try {
+      const katalog = await getKatalogByKeyword(keyword);
+      if (katalog) {
+        setBlogs(katalog.data.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      ToastAndroid.show('Error Get Katalog', ToastAndroid.SHORT);
+    }
+  }, [keyword]);
+
   return (
     <View backgroundColor={Colors.white} flexG paddingB-60>
       <ScrollView>
@@ -52,48 +83,48 @@ const KatalogScreen = ({route, navigation}: any) => {
             accessoryLeft={() => (
               <Icon name="search" size={RFValue(20)} color={Colors.grey40} />
             )}
-            onSubmitEditing={() =>
-              navigation.navigate(PRODUCT_LIST_SCREEN, {
-                filter: {keyword: keyword},
-              })
-            }
+            onSubmitEditing={searchKatalog}
             onChangeText={(nextValue) => setKeyword(nextValue)}
             value={keyword}
           />
           <ScrollView showsHorizontalScrollIndicator={false} horizontal>
-                {homeBrand.map((item: any, i) => {
-                  return (
-                    <View padding-10 key={i}>
-                      <TouchableOpacity
-                        onPress={() =>
-                          navigation.navigate(PRODUCT_LIST_SCREEN, {
-                            filter: {
-                              brand_id: item.brand_id,
-                            },
-                          })
-                        }>
-                        <Image
-                          style={{
-                            width: RFValue(100),
-                            height: RFValue(100),
-                            borderRadius: RFValue(10),
-                          }}
-                          source={{
-                            uri: item.brand_photo || '',
-                          }}
-                        />
-                        <Text style={{padding: RFValue(5)}} font14bold>
-                          {item.brand_name}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  );
-                })}
-              </ScrollView>
+            {homeBrand.map((item: any, i) => {
+              return (
+                <View padding-10 key={i}>
+                  <TouchableOpacity
+                    onPress={() => getKatalogBrand(item.brand_id)}>
+                    <Image
+                      style={{
+                        width: RFValue(100),
+                        height: RFValue(100),
+                        borderRadius: RFValue(10),
+                      }}
+                      source={{
+                        uri: item.brand_photo || '',
+                      }}
+                    />
+                    <Text style={{padding: RFValue(5)}} font14bold>
+                      {item.brand_name}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </ScrollView>
         </View>
-        {blogs.map((item, i) => (
-          <BlogItem key={i} {...item} />
-        ))}
+        {!loading ? (
+          <>
+            {blogs.length > 0 ? (
+              blogs.map((item, i) => <BlogItem key={i} {...item} />)
+            ) : (
+              <EmptyBlog />
+            )}
+          </>
+        ) : (
+          <View flex-1 centerH centerV>
+            <ActivityIndicator animating size="large" color={color.primary} />
+          </View>
+        )}
       </ScrollView>
     </View>
   );

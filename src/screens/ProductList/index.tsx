@@ -74,6 +74,7 @@ const ProductListScreen = ({route, navigation}: any) => {
       if (type[0] === 'brand_id') getProductByBrand();
       if (type[0] === 'category_id') getProductByCategory();
       if (type[0] === 'keyword') getProductByKeyword();
+      if (type[0] === 'series') getProductBySeries();
     } else {
       getAllProducts();
     }
@@ -135,7 +136,7 @@ const ProductListScreen = ({route, navigation}: any) => {
       setProducts(res.data.data);
       setLoading(false);
     } catch (error) {
-      ToastAndroid.show('Error Get Products', ToastAndroid.SHORT);
+      ToastAndroid.show('Error Get Products Brand', ToastAndroid.SHORT);
     }
   }, [route.params]);
 
@@ -161,17 +162,36 @@ const ProductListScreen = ({route, navigation}: any) => {
     }
   }, [route.params]);
 
+  const getProductBySeries = useCallback(async () => {
+    try {
+      const res = await categoryProduct({
+        category: [route.params.filter.series],
+      });
+      setProducts(res.data.data);
+      setLoading(false);
+    } catch (error) {
+      ToastAndroid.show('Error Get Products', ToastAndroid.SHORT);
+    }
+  }, [route.params]);
+
   const applyFilter = useCallback(async () => {
     setModalVisible(false);
+    setLoading(true);
     try {
       const res = await filterProduct(
         {brand: selectedBrand},
         {category: selectedCategory},
+        {series: route.params.filter.series},
+      );
+      console.log(
+        {brand: selectedBrand},
+        {category: selectedCategory},
+        {series: route.params.filter.series},
       );
       setProducts(res.data.data);
       setLoading(false);
     } catch (error) {}
-  }, [selectedBrand, selectedCategory]);
+  }, [selectedBrand, selectedCategory, route.params.filter.series]);
 
   const handleSelectedBrand = useCallback(
     (value: string) => {
@@ -211,6 +231,7 @@ const ProductListScreen = ({route, navigation}: any) => {
       if (type[0] === 'brand_id') await getProductByBrand();
       if (type[0] === 'category_id') await getProductByCategory();
       if (type[0] === 'keyword') await getProductByKeyword();
+      if (type[0] === 'series') await getProductBySeries();
     } else {
       await getAllProducts();
     }

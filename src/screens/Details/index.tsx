@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Button, Tab, TabView, ViewPager} from '@ui-kitten/components';
+import {Tab, TabView} from '@ui-kitten/components';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
@@ -8,20 +8,12 @@ import {
   LogBox,
   RefreshControl,
 } from 'react-native';
-import {
-  FlatList,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native-gesture-handler';
-import { RFValue} from 'react-native-responsive-fontsize';
+import {ScrollView} from 'react-native-gesture-handler';
+import {RFValue} from 'react-native-responsive-fontsize';
 import {View, Text, Colors, Button as UIBtn, Image} from 'react-native-ui-lib';
-// import {Image} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import WebView from 'react-native-webview';
 import color from '../../components/Color';
-import ProductItem from '../../components/ProductItem';
 import {useProductService} from '../../hook/services';
-import {productList} from '../../mock/data';
 import DescriptionInfo from './DescriptionInfo';
 import Carousel from 'react-native-banner-carousel';
 
@@ -29,7 +21,6 @@ export default function DetailsScreen(props: any) {
   const {getDetailProduct} = useProductService();
   const [productDetail, setProductDetail] = useState<any>({});
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [videoID, setVideoID] = useState('');
@@ -50,6 +41,7 @@ export default function DetailsScreen(props: any) {
       const res = await getDetailProduct(props.route.params.product.id);
       if (res) {
         setProductDetail(res.data.data[0]);
+        console.log(res.data.data[0]);
         if (res.data.data[0].video) {
           let arr = productDetail.video.split('/');
           setVideoID(arr[arr.length - 1]);
@@ -59,7 +51,7 @@ export default function DetailsScreen(props: any) {
     setLoading(false);
   }, [props.route.params]);
 
-  const onRefresh = useCallback( () => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
     getDetail();
     setRefreshing(false);
@@ -70,15 +62,16 @@ export default function DetailsScreen(props: any) {
       {!loading ? (
         <View flex-1 backgroundColor={Colors.white}>
           <ScrollView
-           refreshControl={
-            <RefreshControl
-              colors={[color.primary, '#FFFFFF']}
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
-          }
-          >
-            <Carousel pageIndicatorStyle={{backgroundColor:color.primary}} pageSize={Dimensions.get('window').width} >
+            refreshControl={
+              <RefreshControl
+                colors={[color.primary, '#FFFFFF']}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />
+            }>
+            <Carousel
+              pageIndicatorStyle={{backgroundColor: color.primary}}
+              pageSize={Dimensions.get('window').width}>
               {productDetail.image &&
                 productDetail.image.map((item: string, i: number) => {
                   return (
@@ -203,7 +196,9 @@ export default function DetailsScreen(props: any) {
               </Tab>
               <Tab
                 style={{backgroundColor: Colors.white, flex: 1}}
-                title={() => <Text color={color.primary}>Product Knowledge</Text>}>
+                title={() => (
+                  <Text color={color.primary}>Product Knowledge</Text>
+                )}>
                 <View></View>
               </Tab>
             </TabView>

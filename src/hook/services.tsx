@@ -7,6 +7,7 @@ export const useProductService = () => {
   const getAllProduct = async () => await axios.get(`${baseUrl}/product/all`);
   const getDetailProduct = async (id: any) =>
     await axios.get(`${baseUrl}/product/${id}`);
+
   const filterProductBrand = async (brand: {brand: string[]}) =>
     await axios.post(`${baseUrl}/product/all`, brand);
   const filterProductCategory = async (category: {category: string[]}) =>
@@ -37,13 +38,15 @@ export const useBrandService = () => {
       },
     });
   };
+
   const getAllCategory = async () =>
     await axios.get(`${baseUrl}/master/categories`);
+
   const categoryProduct = async (category: {category: string[]}) => {
     const body = new URLSearchParams();
     // @ts-ignore
     body.append('category', JSON.stringify(category));
-    return await axios.post(`${baseUrl}/product/all`, body, {
+    return axios.post(`${baseUrl}/product/all`, body, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -53,11 +56,13 @@ export const useBrandService = () => {
   const filterProduct = async (
     brand: {brand: string[]},
     category: {category: string[]},
+    series: {series: string},
   ) => {
     const body = new URLSearchParams();
     // @ts-ignore
     body.append('category', JSON.stringify(category));
     body.append('brand', JSON.stringify(brand));
+    body.append('series', series.series);
     return await axios.post(`${baseUrl}/product/all`, body, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -76,6 +81,17 @@ export const useBrandService = () => {
     });
   };
 
+  const getSeries = async (brand_id: string) => {
+    const body = new URLSearchParams();
+    // @ts-ignore
+    body.append('brand_id', brand_id);
+    return await axios.post(`${baseUrl}/master/series`, body, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+  };
+
   return {
     getAllBrand,
     brandProduct,
@@ -83,6 +99,7 @@ export const useBrandService = () => {
     categoryProduct,
     filterProduct,
     searchProduct,
+    getSeries,
   } as const;
 };
 
@@ -163,14 +180,49 @@ export const useBlogService = () => {
   const readBlog = async (id: string) => axios.get(`${baseUrl}/${id}`);
   const getBerita = async () => axios.get(`${baseUrl}/berita`);
   const getKatalog = async () => axios.get(`${baseUrl}/katalog`);
-  const getBeritaByRole = async (role: string) =>
-    axios.post(`${baseUrl}/berita}`, {role: role});
-  const getBeritaByKeyword = async (keyword: string) =>
-    axios.post(`${baseUrl}/berita`, {keyword: keyword});
-  const getKatalogByBrand = async (brand: string) =>
-    axios.post(`${baseUrl}/katalog`, {brand: brand});
-  const getKatalogByKeyword = async (keyword: string) =>
-    axios.post(`${baseUrl}/katalog`, {keyword: keyword});
+
+  const getBeritaByRole = async (role: string) => {
+    const body = new URLSearchParams();
+    // @ts-ignore
+    body.append('role', role);
+    return axios.post(`${baseUrl}/berita}`, body, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+  };
+  const getBeritaByKeyword = async (keyword: string) => {
+    const body = new URLSearchParams();
+    // @ts-ignore
+    body.append('keyword', keyword);
+    return axios.post(`${baseUrl}/berita`, body, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+  };
+
+  const getKatalogByBrand = async (brand: string) => {
+    const body = new URLSearchParams();
+    // @ts-ignore
+    body.append('brand', brand);
+    return axios.post(`${baseUrl}/katalog`, body, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+  };
+
+  const getKatalogByKeyword = async (keyword: string) => {
+    const body = new URLSearchParams();
+    // @ts-ignore
+    body.append('keyword', keyword);
+    return axios.post(`${baseUrl}/katalog`, body, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+  };
 
   return {
     getListBlog,
