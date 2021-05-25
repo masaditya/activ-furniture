@@ -16,6 +16,7 @@ import color from '../../components/Color';
 import {useProductService} from '../../hook/services';
 import DescriptionInfo from './DescriptionInfo';
 import Carousel from 'react-native-banner-carousel';
+import Pdf from 'react-native-pdf';
 
 export default function DetailsScreen(props: any) {
   const {getDetailProduct} = useProductService();
@@ -24,6 +25,10 @@ export default function DetailsScreen(props: any) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [videoID, setVideoID] = useState('');
+  const source = {
+    uri: 'http://samples.leanpub.com/thereactnativebook-sample.pdf',
+    cache: true,
+  };
 
   const tmp = [1, 2, 3, 4];
 
@@ -38,7 +43,7 @@ export default function DetailsScreen(props: any) {
   const getDetail = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await getDetailProduct(props.route.params.product.id);
+      const res = await getDetailProduct(2);
       if (res) {
         setProductDetail(res.data.data[0]);
         console.log(res.data.data[0]);
@@ -62,6 +67,7 @@ export default function DetailsScreen(props: any) {
       {!loading ? (
         <View flex-1 backgroundColor={Colors.white}>
           <ScrollView
+            contentContainerStyle={{flexGrow: 1}}
             refreshControl={
               <RefreshControl
                 colors={[color.primary, '#FFFFFF']}
@@ -118,80 +124,78 @@ export default function DetailsScreen(props: any) {
               onSelect={(index) => setSelectedIndex(index)}>
               <Tab title={() => <Text color={color.primary}>Description</Text>}>
                 <View flex-1 backgroundColor={Colors.white} padding-20>
-                  <ScrollView showsVerticalScrollIndicator={false}>
-                    <Text>{productDetail.post_content || '-'}</Text>
+                  <Text>{productDetail.post_content || '-'}</Text>
 
-                    <View paddingV-20>
-                      <DescriptionInfo
-                        field="Brand"
-                        value={productDetail.brand || '-'}
-                      />
-                      <DescriptionInfo
-                        field="Dimensi"
-                        value={productDetail.dimension || '-'}
-                      />
-                      <DescriptionInfo
-                        field="Volume"
-                        value={productDetail.total_volume || '-'}
-                      />
-                      <DescriptionInfo
-                        field="Berat Kotor"
-                        value={productDetail.gross_weight || '-'}
-                      />
-                      <DescriptionInfo
-                        field="Series"
-                        value={productDetail.series_name || '-'}
-                      />
+                  <View paddingV-20>
+                    <DescriptionInfo
+                      field="Brand"
+                      value={productDetail.brand || '-'}
+                    />
+                    <DescriptionInfo
+                      field="Dimensi"
+                      value={productDetail.dimension || '-'}
+                    />
+                    <DescriptionInfo
+                      field="Volume"
+                      value={productDetail.total_volume || '-'}
+                    />
+                    <DescriptionInfo
+                      field="Berat Kotor"
+                      value={productDetail.gross_weight || '-'}
+                    />
+                    <DescriptionInfo
+                      field="Series"
+                      value={productDetail.series_name || '-'}
+                    />
 
-                      {/* <DescriptionInfo
+                    {/* <DescriptionInfo
                         field="Product Assembly"
                         value={productDetail.product_assembly || '-'}
                       /> */}
-                      {productDetail.product_assembly && (
-                        <View row flex-2 centerV>
-                          <View flex-1>
-                            <Text grey40>Perakitan Produk</Text>
-                          </View>
-                          <View flex-1>
-                            <UIBtn
-                              fullWidth
-                              backgroundColor={color.primary}
-                              size={UIBtn.sizes.small}
-                              onPress={() =>
-                                Linking.openURL(productDetail.product_assembly)
-                              }>
-                              <Text white>Buka</Text>
-                            </UIBtn>
-                          </View>
-                        </View>
-                      )}
-                      <View row flex-2 centerV marginV-10>
+                    {productDetail.product_assembly && (
+                      <View row flex-2 centerV>
                         <View flex-1>
-                          <Text grey40>Warna</Text>
+                          <Text grey40>Perakitan Produk</Text>
                         </View>
                         <View flex-1>
-                          {productDetail.color &&
-                            productDetail.color.map((color: any, i: number) => {
-                              return (
-                                <View row key={i} centerV>
-                                  <Text>{color.value}</Text>
-                                  <Image
-                                    marginL-10
-                                    style={{
-                                      width: RFValue(50),
-                                      height: RFValue(50),
-                                    }}
-                                    source={{
-                                      uri: color.photo,
-                                    }}
-                                  />
-                                </View>
-                              );
-                            })}
+                          <UIBtn
+                            fullWidth
+                            backgroundColor={color.primary}
+                            size={UIBtn.sizes.small}
+                            onPress={() =>
+                              Linking.openURL(productDetail.product_assembly)
+                            }>
+                            <Text white>Buka</Text>
+                          </UIBtn>
                         </View>
                       </View>
+                    )}
+                    <View row flex-2 centerV marginV-10>
+                      <View flex-1>
+                        <Text grey40>Warna</Text>
+                      </View>
+                      <View flex-1>
+                        {productDetail.color &&
+                          productDetail.color.map((color: any, i: number) => {
+                            return (
+                              <View row key={i} centerV>
+                                <Text>{color.value}</Text>
+                                <Image
+                                  marginL-10
+                                  style={{
+                                    width: RFValue(50),
+                                    height: RFValue(50),
+                                  }}
+                                  source={{
+                                    uri: color.photo,
+                                  }}
+                                />
+                              </View>
+                            );
+                          })}
+                      </View>
                     </View>
-                  </ScrollView>
+                  </View>
                 </View>
               </Tab>
               <Tab
@@ -199,7 +203,31 @@ export default function DetailsScreen(props: any) {
                 title={() => (
                   <Text color={color.primary}>Product Knowledge</Text>
                 )}>
-                <View></View>
+                <View>
+                  <ScrollView contentContainerStyle={{flex: 1}}>
+                    <Pdf
+                      source={{uri: productDetail.knowledge[0].link} || source}
+                      onLoadComplete={(numberOfPages, filePath) => {
+                        console.log(`number of pages: ${numberOfPages}`);
+                      }}
+                      enableRTL={true}
+                      onPageChanged={(page, numberOfPages) => {
+                        console.log(`current page: ${page}`);
+                      }}
+                      onError={(error) => {
+                        console.log(error);
+                      }}
+                      onPressLink={(uri) => {
+                        console.log(`Link presse: ${uri}`);
+                      }}
+                      style={{
+                        flex: 1,
+                        width: Dimensions.get('screen').width,
+                        height: Dimensions.get('screen').height,
+                      }}
+                    />
+                  </ScrollView>
+                </View>
               </Tab>
             </TabView>
           </ScrollView>
