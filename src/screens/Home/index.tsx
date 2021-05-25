@@ -13,6 +13,7 @@ import {
   CATEGORY_LIST_SCREEN,
   PRODUCT_LIST_SCREEN,
   SERIES_SCREEN,
+  SUBCATEGORI_SCREEN,
 } from '../../navigation/routename';
 import PopupModal from './PopupModal';
 import Carousel from 'react-native-banner-carousel';
@@ -196,7 +197,7 @@ export default function HomeScreen({navigation, route}: any) {
                 <View padding-10 key={i}>
                   <TouchableOpacity
                     onPress={() =>
-                      navigation.navigate(PRODUCT_LIST_SCREEN, {
+                      navigation.navigate(SUBCATEGORI_SCREEN, {
                         filter: {
                           category_id: item.category_id,
                         },

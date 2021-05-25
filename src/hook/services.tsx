@@ -92,6 +92,17 @@ export const useBrandService = () => {
     });
   };
 
+  const getSubCategory = async (id_kategori : string)=> {
+    const body = new URLSearchParams();
+    // @ts-ignore
+    body.append('id_kategori', parseInt(id_kategori));
+    return await axios.post(`${baseUrl}/master/categories`, body, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+  }
+
   return {
     getAllBrand,
     brandProduct,
@@ -100,6 +111,7 @@ export const useBrandService = () => {
     filterProduct,
     searchProduct,
     getSeries,
+    getSubCategory
   } as const;
 };
 

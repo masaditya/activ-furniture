@@ -17,6 +17,7 @@ import {
   ABOUT_SCREEN,
   KATALOG_SCREEN,
   SERIES_SCREEN,
+  SUBCATEGORI_SCREEN,
 } from './routename';
 import DetailsScreen from '../screens/Details';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -34,6 +35,7 @@ import BlogNavigation from './BlogNavigation';
 import AboutScreen from '../screens/About';
 import KatalogScreen from '../screens/Katalog';
 import SeriesScreen from '../screens/Series';
+import SubCategoryScreen from '../screens/Subcategory';
 
 const Drawer = createDrawerNavigator();
 
@@ -120,6 +122,17 @@ export default function MainNavigation(props: any) {
         })}
         name={SERIES_SCREEN}
         component={SeriesScreen}
+      />
+      <Drawer.Screen
+        options={({navigation}) => ({
+          ...mainHeaderOptions,
+          gestureEnabled: false,
+          headerLeft: (props) => (
+            <HeaderBackButton onPress={() => navigation.goBack()} />
+          ),
+        })}
+        name={SUBCATEGORI_SCREEN}
+        component={SubCategoryScreen}
       />
       <Drawer.Screen
         options={({navigation}) => ({
