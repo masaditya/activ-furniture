@@ -34,6 +34,7 @@ export default function DetailsScreen(props: any) {
 
   useEffect(() => {
     getDetail();
+    console.log(props.route);
     LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     return () => {
       setLoading(true);
@@ -43,10 +44,10 @@ export default function DetailsScreen(props: any) {
   const getDetail = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await getDetailProduct(2);
-      if (res) {
+      const res = await getDetailProduct(props.route.params.product.id);
+      if (res.data.data) {
         setProductDetail(res.data.data[0]);
-        console.log(res.data.data[0]);
+        console.log(res.data);
         if (res.data.data[0].video) {
           let arr = productDetail.video.split('/');
           setVideoID(arr[arr.length - 1]);
@@ -78,7 +79,7 @@ export default function DetailsScreen(props: any) {
             <Carousel
               pageIndicatorStyle={{backgroundColor: color.primary}}
               pageSize={Dimensions.get('window').width}>
-              {productDetail.image &&
+              {productDetail &&
                 productDetail.image.map((item: string, i: number) => {
                   return (
                     <Image
@@ -92,7 +93,7 @@ export default function DetailsScreen(props: any) {
                     />
                   );
                 })}
-              {productDetail.video && (
+              {productDetail && productDetail.video && (
                 <WebView
                   style={{width: '100%', height: 230, marginHorizontal: 'auto'}}
                   javaScriptEnabled={true}
@@ -109,11 +110,11 @@ export default function DetailsScreen(props: any) {
 
             <View backgroundColor={Colors.white} padding-15>
               <Text style={{paddingVertical: RFValue(5)}} font16bold>
-                {productDetail.title || ''}
+                {(productDetail && productDetail.title) || '-'}
               </Text>
               <View row spread centerV paddingT-10>
                 <Text font10 color={Colors.grey40}>
-                  {productDetail.category || ''}
+                  {(productDetail && productDetail.category) || '-'}
                 </Text>
               </View>
             </View>
@@ -124,35 +125,43 @@ export default function DetailsScreen(props: any) {
               onSelect={(index) => setSelectedIndex(index)}>
               <Tab title={() => <Text color={color.primary}>Description</Text>}>
                 <View flex-1 backgroundColor={Colors.white} padding-20>
-                  <Text>{productDetail.post_content || '-'}</Text>
+                  <Text>
+                    {(productDetail && productDetail.post_content) || '-'}
+                  </Text>
 
                   <View paddingV-20>
                     <DescriptionInfo
                       field="Brand"
-                      value={productDetail.brand || '-'}
+                      value={(productDetail && productDetail.brand) || '-'}
                     />
                     <DescriptionInfo
                       field="Dimensi"
-                      value={productDetail.dimension || '-'}
+                      value={(productDetail && productDetail.dimension) || '-'}
                     />
                     <DescriptionInfo
                       field="Volume"
-                      value={productDetail.total_volume || '-'}
+                      value={
+                        (productDetail && productDetail.total_volume) || '-'
+                      }
                     />
                     <DescriptionInfo
                       field="Berat Kotor"
-                      value={productDetail.gross_weight || '-'}
+                      value={
+                        (productDetail && productDetail.gross_weight) || '-'
+                      }
                     />
                     <DescriptionInfo
                       field="Series"
-                      value={productDetail.series_name || '-'}
+                      value={
+                        (productDetail && productDetail.series_name) || '-'
+                      }
                     />
 
                     {/* <DescriptionInfo
                         field="Product Assembly"
                         value={productDetail.product_assembly || '-'}
                       /> */}
-                    {productDetail.product_assembly && (
+                    {productDetail && productDetail.product_assembly && (
                       <View row flex-2 centerV>
                         <View flex-1>
                           <Text grey40>Perakitan Produk</Text>
@@ -175,10 +184,11 @@ export default function DetailsScreen(props: any) {
                         <Text grey40>Warna</Text>
                       </View>
                       <View flex-1>
-                        {productDetail.color &&
+                        {productDetail &&
+                          productDetail.color &&
                           productDetail.color.map((color: any, i: number) => {
                             return (
-                              <View row key={i} centerV>
+                              <View key={i} centerV centerH>
                                 <Text>{color.value}</Text>
                                 <Image
                                   marginL-10
@@ -204,29 +214,33 @@ export default function DetailsScreen(props: any) {
                   <Text color={color.primary}>Product Knowledge</Text>
                 )}>
                 <View>
-                  <ScrollView contentContainerStyle={{flex: 1}}>
-                    <Pdf
-                      source={{uri: productDetail.knowledge[0].link} || source}
-                      onLoadComplete={(numberOfPages, filePath) => {
-                        console.log(`number of pages: ${numberOfPages}`);
-                      }}
-                      enableRTL={true}
-                      onPageChanged={(page, numberOfPages) => {
-                        console.log(`current page: ${page}`);
-                      }}
-                      onError={(error) => {
-                        console.log(error);
-                      }}
-                      onPressLink={(uri) => {
-                        console.log(`Link presse: ${uri}`);
-                      }}
-                      style={{
-                        flex: 1,
-                        width: Dimensions.get('screen').width,
-                        height: Dimensions.get('screen').height,
-                      }}
-                    />
-                  </ScrollView>
+                  {productDetail && productDetail.knowledge.length > 0 && (
+                    <ScrollView contentContainerStyle={{flex: 1}}>
+                      <Pdf
+                        source={
+                          {uri: productDetail.knowledge[0].link} || source
+                        }
+                        onLoadComplete={(numberOfPages, filePath) => {
+                          console.log(`number of pages: ${numberOfPages}`);
+                        }}
+                        enableRTL={true}
+                        onPageChanged={(page, numberOfPages) => {
+                          console.log(`current page: ${page}`);
+                        }}
+                        onError={(error) => {
+                          console.log(error);
+                        }}
+                        onPressLink={(uri) => {
+                          console.log(`Link presse: ${uri}`);
+                        }}
+                        style={{
+                          flex: 1,
+                          width: Dimensions.get('screen').width,
+                          height: Dimensions.get('screen').height,
+                        }}
+                      />
+                    </ScrollView>
+                  )}
                 </View>
               </Tab>
             </TabView>
