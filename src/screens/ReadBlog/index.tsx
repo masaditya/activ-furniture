@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import WebView from 'react-native-webview';
 import EmptyProduct from '../ProductList/EmptyProduct';
+import Pdf from 'react-native-pdf';
 
 const ReadBlogScreen = ({route, navigation}: any) => {
   const {readBlog} = useBlogService();
@@ -35,8 +36,8 @@ const ReadBlogScreen = ({route, navigation}: any) => {
       if (res.data.data.length > 0) {
         setBlogContent(res.data.data[0]);
         setLoading(false);
-      }else{
-        setLoading(false)
+      } else {
+        setLoading(false);
       }
     } catch (error) {}
   }, [route.params]);
@@ -46,6 +47,12 @@ const ReadBlogScreen = ({route, navigation}: any) => {
     getBlogContent();
     setRefreshing(false);
   }, [refreshing]);
+
+  const isPdfLink = useCallback((link: string) => {
+    let b = link.split('.');
+    let c = b.pop();
+    return c === 'pdf';
+  }, []);
 
   return (
     <View flexG backgroundColor={Colors.white}>
@@ -65,7 +72,7 @@ const ReadBlogScreen = ({route, navigation}: any) => {
               borderBottomLeftRadius: RFValue(30),
             }}
             source={{
-              uri: blogContent.imgurl || "",
+              uri: blogContent.imgurl || '',
             }}
           />
           <View
@@ -75,7 +82,9 @@ const ReadBlogScreen = ({route, navigation}: any) => {
               borderTopRightRadius: RFValue(30),
               borderBottomLeftRadius: RFValue(30),
             }}>
-            <Text font18bold>{blogContent.post_title || "Blog Tidak Tersedia"}</Text>
+            <Text font18bold>
+              {blogContent.post_title || 'Blog Tidak Tersedia'}
+            </Text>
             <Text color={color.primary} font14bold>
               {blogContent.post_type &&
                 blogContent.post_type.toString().toUpperCase()}
@@ -83,36 +92,64 @@ const ReadBlogScreen = ({route, navigation}: any) => {
             <View row spread marginT-20>
               <Text font12 grey30>
                 <Icon name="person" />
-                {blogContent.author || "author"}
+                {blogContent.author || 'author'}
               </Text>
               <Text font12 grey30>
                 <Icon name="timer" />
-                {blogContent.publish_date || "publish date"}
+                {blogContent.publish_date || 'publish date'}
               </Text>
             </View>
           </View>
           <View
             flex-1
-            padding-30
+            padding-10
             backgroundColor={Colors.white}
             style={{
               borderTopLeftRadius: RFValue(20),
               borderTopRightRadius: RFValue(30),
             }}>
-            { blogContent.konten ? <WebView
-              injectedJavaScript={`const meta = document.createElement('meta'); meta.setAttribute('content', 'width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `}
-              scalesPageToFit={false}
-              originWhitelist={['*']}
-              style={{
-                width: Dimensions.get('screen').width,
-                height: Dimensions.get('screen').height,
-              }}
-              automaticallyAdjustContentInsets={false}
-              scrollEnabled={true}
-              domStorageEnabled={true}
-              javaScriptEnabled={true}
-              source={{html: blogContent.konten || contentHTML}}
-            /> : <EmptyProduct message="Artikel Tidak dapat ditemukan" />}
+            {!isPdfLink(blogContent.konten) ? (
+              <WebView
+                injectedJavaScript={`const meta = document.createElement('meta'); meta.setAttribute('content', 'width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `}
+                scalesPageToFit={false}
+                originWhitelist={['*']}
+                style={{
+                  width: Dimensions.get('window').width,
+                  height: Dimensions.get('window').height,
+                }}
+                automaticallyAdjustContentInsets={false}
+                scrollEnabled={true}
+                domStorageEnabled={true}
+                javaScriptEnabled={true}
+                source={
+                  blogContent.konten
+                    ? {uri: blogContent.konten}
+                    : {html: contentHTML}
+                }
+              />
+            ) : (
+              <Pdf
+                source={{uri: blogContent.konten} || ''}
+                onLoadComplete={(numberOfPages, filePath) => {
+                  console.log(`number of pages: ${numberOfPages}`);
+                }}
+                enableRTL={true}
+                onPageChanged={(page, numberOfPages) => {
+                  console.log(`current page: ${page}`);
+                }}
+                onError={(error) => {
+                  console.log(error);
+                }}
+                onPressLink={(uri) => {
+                  console.log(`Link presse: ${uri}`);
+                }}
+                style={{
+                  flex: 1,
+                  width: Dimensions.get('screen').width,
+                  height: Dimensions.get('screen').height,
+                }}
+              />
+            )}
           </View>
         </ScrollView>
       ) : (
