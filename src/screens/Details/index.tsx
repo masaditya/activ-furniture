@@ -17,6 +17,7 @@ import {useProductService} from '../../hook/services';
 import DescriptionInfo from './DescriptionInfo';
 import Carousel from 'react-native-banner-carousel';
 import Pdf from 'react-native-pdf';
+import EmptyProduct from '../ProductList/EmptyProduct';
 
 export default function DetailsScreen(props: any) {
   const {getDetailProduct} = useProductService();
@@ -77,6 +78,7 @@ export default function DetailsScreen(props: any) {
               />
             }>
             <Carousel
+              autoplayTimeout={600000}
               pageIndicatorStyle={{backgroundColor: color.primary}}
               pageSize={Dimensions.get('window').width}>
               {productDetail &&
@@ -214,7 +216,7 @@ export default function DetailsScreen(props: any) {
                   <Text color={color.primary}>Product Knowledge</Text>
                 )}>
                 <View>
-                  {productDetail && productDetail.knowledge.length > 0 && (
+                  {productDetail && productDetail.knowledge.length > 0 ? (
                     <ScrollView contentContainerStyle={{flex: 1}}>
                       <Pdf
                         source={
@@ -240,7 +242,7 @@ export default function DetailsScreen(props: any) {
                         }}
                       />
                     </ScrollView>
-                  )}
+                  ) : <EmptyProduct message="TIdak ada Deskripsi Untuk Produk Ini" />}
                 </View>
               </Tab>
             </TabView>

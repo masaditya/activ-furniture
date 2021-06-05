@@ -5,8 +5,8 @@ import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import {Image, View, Modal, Button, Text, Colors} from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/Ionicons';
 import color from '../../components/Color';
-import { RootContext } from '../../context';
-import { useProductService} from '../../hook/services';
+import {RootContext} from '../../context';
+import {useProductService} from '../../hook/services';
 import {READ_BLOG_SCREEN} from '../../navigation/routename';
 
 type ModalProps = {
@@ -18,11 +18,11 @@ const PopupModal = (props: ModalProps) => {
   const navigation = useNavigation();
   const {getPopup} = useProductService();
   const [popUpContent, setPopUpContent] = useState<any>({});
- // @ts-ignore
- const {globalState} = useContext(RootContext);
+  // @ts-ignore
+  const {globalState} = useContext(RootContext);
 
   React.useEffect(() => {
-    if(!globalState.isSignout){
+    if (!globalState.isSignout) {
       getFirstBlog();
     }
 
@@ -34,14 +34,12 @@ const PopupModal = (props: ModalProps) => {
   const getFirstBlog = React.useCallback(async () => {
     try {
       const res = await getPopup();
-
+      console.log(res.data.data);
       if (res.data.data.length > 0) {
         setPopUpContent(res.data.data[0]);
-
         props.setVisible(true);
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }, []);
 
   return (
@@ -72,19 +70,6 @@ const PopupModal = (props: ModalProps) => {
                 {popUpContent.slider_description &&
                   popUpContent.slider_description}
               </Text>
-              {/* <Text font12 numberOfLines={2}>
-                {popUpContent.post_title}
-              </Text> */}
-              {/* <View row spread marginT-20>
-                <Text font10 grey30>
-                  <Icon name="person" />
-                  {popUpContent.author}
-                </Text>
-                <Text font10 grey30>
-                  <Icon name="timer" />
-                  {popUpContent.publish_date}
-                </Text>
-              </View> */}
             </View>
           </View>
         </ImageBackground>

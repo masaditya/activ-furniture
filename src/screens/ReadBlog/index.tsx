@@ -14,13 +14,14 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import WebView from 'react-native-webview';
+import EmptyProduct from '../ProductList/EmptyProduct';
 
 const ReadBlogScreen = ({route, navigation}: any) => {
   const {readBlog} = useBlogService();
   const [blogContent, setBlogContent] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  
+
   useEffect(() => {
     getBlogContent();
     LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
@@ -31,8 +32,12 @@ const ReadBlogScreen = ({route, navigation}: any) => {
     setLoading(true);
     try {
       const res = await readBlog(route.params.id);
-      setBlogContent(res.data.data[0]);
-      setLoading(false);
+      if (res.data.data.length > 0) {
+        setBlogContent(res.data.data[0]);
+        setLoading(false);
+      }else{
+        setLoading(false)
+      }
     } catch (error) {}
   }, [route.params]);
 
@@ -60,7 +65,7 @@ const ReadBlogScreen = ({route, navigation}: any) => {
               borderBottomLeftRadius: RFValue(30),
             }}
             source={{
-              uri: blogContent.imgurl,
+              uri: blogContent.imgurl || "",
             }}
           />
           <View
@@ -70,7 +75,7 @@ const ReadBlogScreen = ({route, navigation}: any) => {
               borderTopRightRadius: RFValue(30),
               borderBottomLeftRadius: RFValue(30),
             }}>
-            <Text font18bold>{blogContent.post_title}</Text>
+            <Text font18bold>{blogContent.post_title || "Blog Tidak Tersedia"}</Text>
             <Text color={color.primary} font14bold>
               {blogContent.post_type &&
                 blogContent.post_type.toString().toUpperCase()}
@@ -78,11 +83,11 @@ const ReadBlogScreen = ({route, navigation}: any) => {
             <View row spread marginT-20>
               <Text font12 grey30>
                 <Icon name="person" />
-                {blogContent.author}
+                {blogContent.author || "author"}
               </Text>
               <Text font12 grey30>
                 <Icon name="timer" />
-                {blogContent.publish_date}
+                {blogContent.publish_date || "publish date"}
               </Text>
             </View>
           </View>
@@ -94,7 +99,7 @@ const ReadBlogScreen = ({route, navigation}: any) => {
               borderTopLeftRadius: RFValue(20),
               borderTopRightRadius: RFValue(30),
             }}>
-            <WebView
+            { blogContent.konten ? <WebView
               injectedJavaScript={`const meta = document.createElement('meta'); meta.setAttribute('content', 'width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `}
               scalesPageToFit={false}
               originWhitelist={['*']}
@@ -107,8 +112,7 @@ const ReadBlogScreen = ({route, navigation}: any) => {
               domStorageEnabled={true}
               javaScriptEnabled={true}
               source={{html: blogContent.konten || contentHTML}}
-            />
-            {/* <HTML source={blogContent.konten || contentHTML} /> */}
+            /> : <EmptyProduct message="Artikel Tidak dapat ditemukan" />}
           </View>
         </ScrollView>
       ) : (
@@ -121,10 +125,8 @@ const ReadBlogScreen = ({route, navigation}: any) => {
 };
 
 const contentHTML = `
-<h1>This HTML snippet is now rendered with native components !</h1>
-<h2>Enjoy a webview-free and blazing fast application</h2>
-<img src="https://i.imgur.com/dHLmxfO.jpg?2" />
-<em style="textAlign: center;">Look at how happy this native cat is</em>
+<h1>Artikel Tidak Ditemukan !</h1>
+<h2></h2>
 `;
 
 export default ReadBlogScreen;
