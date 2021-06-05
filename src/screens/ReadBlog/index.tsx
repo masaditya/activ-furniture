@@ -54,6 +54,11 @@ const ReadBlogScreen = ({route, navigation}: any) => {
     return c === 'pdf';
   }, []);
 
+  const isTagHtml = useCallback((konten: string) => {
+    console.log(konten[0] === '<');
+    return konten[0] === '<';
+  }, []);
+
   return (
     <View flexG backgroundColor={Colors.white}>
       {!loading ? (
@@ -108,48 +113,52 @@ const ReadBlogScreen = ({route, navigation}: any) => {
               borderTopLeftRadius: RFValue(20),
               borderTopRightRadius: RFValue(30),
             }}>
-            {!isPdfLink(blogContent.konten) ? (
-              <WebView
-                injectedJavaScript={`const meta = document.createElement('meta'); meta.setAttribute('content', 'width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `}
-                scalesPageToFit={false}
-                originWhitelist={['*']}
-                style={{
-                  width: Dimensions.get('window').width,
-                  height: Dimensions.get('window').height,
-                }}
-                automaticallyAdjustContentInsets={false}
-                scrollEnabled={true}
-                domStorageEnabled={true}
-                javaScriptEnabled={true}
-                source={
-                  blogContent.konten
-                    ? {uri: blogContent.konten}
-                    : {html: contentHTML}
-                }
-              />
-            ) : (
-              <Pdf
-                source={{uri: blogContent.konten} || ''}
-                onLoadComplete={(numberOfPages, filePath) => {
-                  console.log(`number of pages: ${numberOfPages}`);
-                }}
-                enableRTL={true}
-                onPageChanged={(page, numberOfPages) => {
-                  console.log(`current page: ${page}`);
-                }}
-                onError={(error) => {
-                  console.log(error);
-                }}
-                onPressLink={(uri) => {
-                  console.log(`Link presse: ${uri}`);
-                }}
-                style={{
-                  flex: 1,
-                  width: Dimensions.get('screen').width,
-                  height: Dimensions.get('screen').height,
-                }}
-              />
-            )}
+            { blogContent.konten ? <>
+              {!isPdfLink(blogContent.konten) ? (
+                <WebView
+                  injectedJavaScript={`const meta = document.createElement('meta'); meta.setAttribute('content', 'width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0'); meta.setAttribute('name', 'viewport'); document.getElementsByTagName('head')[0].appendChild(meta); `}
+                  scalesPageToFit={false}
+                  originWhitelist={['*']}
+                  style={{
+                    width: Dimensions.get('window').width,
+                    height: Dimensions.get('window').height,
+                  }}
+                  automaticallyAdjustContentInsets={false}
+                  scrollEnabled={true}
+                  domStorageEnabled={true}
+                  javaScriptEnabled={true}
+                  source={
+                    !isTagHtml(blogContent.konten)
+                      ? {uri: blogContent.konten}
+                      : {html: blogContent.konten}
+                  }
+                />
+              ) : (
+                <Pdf
+                  source={{uri: blogContent.konten} || ''}
+                  onLoadComplete={(numberOfPages, filePath) => {
+                    console.log(`number of pages: ${numberOfPages}`);
+                  }}
+                  enableRTL={true}
+                  onPageChanged={(page, numberOfPages) => {
+                    console.log(`current page: ${page}`);
+                  }}
+                  onError={(error) => {
+                    console.log(error);
+                  }}
+                  onPressLink={(uri) => {
+                    console.log(`Link presse: ${uri}`);
+                  }}
+                  style={{
+                    flex: 1,
+                    width: Dimensions.get('screen').width,
+                    height: Dimensions.get('screen').height,
+                  }}
+                />
+              )}
+            </> : 
+              <EmptyProduct message="Artikel ini tidak memiliki Konten" />
+            }
           </View>
         </ScrollView>
       ) : (
