@@ -6,14 +6,20 @@ import {HOME_SCREEN, REGISTER_SCREEN} from '../../../navigation/routename';
 import {Input} from '@ui-kitten/components';
 import {useAuthService} from '../../../hook/services';
 import {RootContext} from '../../../context';
-import { ActivityIndicator, ToastAndroid } from 'react-native';
-import { RFValue } from 'react-native-responsive-fontsize';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {
+  ActivityIndicator,
+  ToastAndroid,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import {RFValue} from 'react-native-responsive-fontsize';
 
 const LoginScreen = ({navigation}: any) => {
   const {loginUser, storeUsername, getUsername} = useAuthService();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [secureTextEntry, setSecureTextEntry] = React.useState(true);
   // @ts-ignore
   const {dispatch} = useContext(RootContext);
   // useEffect(() => {
@@ -27,22 +33,31 @@ const LoginScreen = ({navigation}: any) => {
   // }, []);
 
   const submitLogin = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const res = await loginUser(username, password);
-      console.log(res.data)
+      console.log(res.data);
       if (res.data.status === 'sukses') {
         storeUsername(res.data.data[0]).then((result) => {
           dispatch(result);
         });
       } else {
-        ToastAndroid.show(res.data.message, ToastAndroid.SHORT)
+        ToastAndroid.show(res.data.message, ToastAndroid.SHORT);
       }
-    } catch (error) {
-    }
-    setLoading(false)
-
+    } catch (error) {}
+    setLoading(false);
   }, [username, password]);
+
+  const renderIcon = (props: any) => (
+    <TouchableWithoutFeedback
+      onPress={() => setSecureTextEntry(!secureTextEntry)}>
+      <Icon
+        name={secureTextEntry ? 'eye-off' : 'eye'}
+        size={25}
+        color={color.primary}
+      />
+    </TouchableWithoutFeedback>
+  );
 
   return (
     <View flex-1 backgroundColor={Colors.white}>
@@ -68,7 +83,8 @@ const LoginScreen = ({navigation}: any) => {
             <View paddingB-20>
               <Input
                 label="Password"
-                secureTextEntry
+                accessoryRight={renderIcon}
+                secureTextEntry={secureTextEntry}
                 status="success"
                 value={password}
                 onChangeText={(nextValue) => setPassword(nextValue)}
@@ -83,8 +99,14 @@ const LoginScreen = ({navigation}: any) => {
           backgroundColor={color.primary}
           flex-1
           fullWidth>
-          { loading && <ActivityIndicator style={{paddingHorizontal:RFValue(10)}} size="small" color="#ffffff"/>}
-          <Text  font16 color={Colors.white}>
+          {loading && (
+            <ActivityIndicator
+              style={{paddingHorizontal: RFValue(10)}}
+              size="small"
+              color="#ffffff"
+            />
+          )}
+          <Text font16 color={Colors.white}>
             Signin
           </Text>
         </Button>
