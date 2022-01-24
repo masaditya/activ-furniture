@@ -5,13 +5,18 @@ import WebView from 'react-native-webview';
 import {Dimensions} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 
-const AboutScreen = () => {
+const AboutScreen = (props: any) => {
   const {getAbout} = useAbout();
   const [content, setContent] = useState<any>({});
 
   React.useEffect(() => {
-    getContent();
-    return () => {};
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      // Screen was focused
+      // Do something
+      getContent();
+    });
+
+    return unsubscribe;
   }, []);
 
   const getContent = React.useCallback(async () => {
