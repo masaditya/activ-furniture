@@ -197,7 +197,7 @@ export const useBlogService = () => {
     const body = new URLSearchParams();
     // @ts-ignore
     body.append('role', role);
-    return axios.post(`${baseUrl}/berita}`, body, {
+    return axios.post(`${baseUrl}/berita`, body, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },

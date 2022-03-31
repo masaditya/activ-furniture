@@ -19,10 +19,15 @@ const BlogScreen = ({route, navigation}: any) => {
   const {globalState, dispatch} = useContext(RootContext);
 
   useEffect(() => {
-    getBlogs();
-    console.log(globalState);
-    return () => {};
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      // Screen was focused
+      getBlogs();
+      console.log(globalState);
+      // Do something
+    });
+    
+    return unsubscribe;
+  }, [navigation]);
 
   const getBlogs = useCallback(async () => {
     try {

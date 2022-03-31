@@ -68,6 +68,7 @@ const ProductListScreen = ({route, navigation}: any) => {
   }, []);
 
   useEffect(() => {
+    console.log("ROUTE", route.params)
     if (route.params) {
       let type = Object.keys(route.params.filter);
       // console.log(route.params);
@@ -167,6 +168,7 @@ const ProductListScreen = ({route, navigation}: any) => {
       const res = await categoryProduct({
         category: [route.params.filter.series],
       });
+      console.log("RESUT", res.data.data)
       setProducts(res.data.data);
       setLoading(false);
     } catch (error) {

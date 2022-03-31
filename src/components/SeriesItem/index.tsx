@@ -29,7 +29,7 @@ const SeriesItem = ({series}: any) => {
           }}
         />
         <View flex-1 padding-10 row spread>
-          <View>
+          <View style={{maxWidth:200}}>
             <Text style={{padding: RFValue(5)}} font18bold green10>
               {series.series_name}
             </Text>
