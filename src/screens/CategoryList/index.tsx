@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, LogBox} from 'react-native';
 import {
   View,
   Text,
@@ -37,6 +37,7 @@ const CategoryListScreen = ({route, navigation}: any) => {
       ),
     });
     setcategoryList(Object.values(route.params));
+    LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
   }, []);
 
   return (
